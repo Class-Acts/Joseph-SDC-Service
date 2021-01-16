@@ -14,7 +14,6 @@ app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 
 app.get('/products/:id', (req, res) => {
-  debugger;
   let product = req.params.id;
   db.getQuestions(product, (err, data) => {
     if (err) {
