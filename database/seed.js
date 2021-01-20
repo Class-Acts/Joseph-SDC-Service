@@ -1,18 +1,18 @@
 const db = require('./database.js');
 const faker = require('faker');
 
-let seedProducts = function(n) {
-  for (let i = 0; i < n; i++) {
-    let temp = faker.random.words(3);
-    db.insertProduct(temp, (err, data) => {
-      if (err) {
-        console.log('error in seeding products function: ' + err);
-      }
-    })
-  }
-};
+// let seedProducts = function(n) {
+//   for (let i = 0; i < n; i++) {
+//     let temp = faker.random.words(3);
+//     db.insertProduct(temp, (err, data) => {
+//       if (err) {
+//         console.log('error inserting products from seed file: ' + err);
+//       }
+//     })
+//   }
+// };
 
-seedProducts(40);
+// seedProducts(40);
 
 let convertDate = function(str) {
   let splitDates = str.split(' ');
@@ -27,8 +27,8 @@ let convertDate = function(str) {
   return newDate;
 }
 
-let seedData = function(n) {
-  let allData = [];
+let seedQuestions = function(n) {
+  let seedQuestions = [];
   for (let i = 1; i <= n; i++) {
     for (let j = 0; j < 3; j++) {
       let dataToSeed = [];
@@ -38,18 +38,18 @@ let seedData = function(n) {
       dataToSeed.push(date);
       dataToSeed.push(faker.random.words(faker.random.number({min: 8, max: 20})) + '?');
       dataToSeed.push(i);
-      allData.push(dataToSeed);
+      seedQuestions.push(dataToSeed);
     }
   }
-  return allData;
+  return seedQuestions;
 };
 
-let seeds = seedData(40);
+let questions = seedQuestions(40);
 
-seeds.forEach((seed) => {
-  db.insertQuestion(seed, (err, data) => {
+questions.forEach((question) => {
+  db.insertQuestion(question, (err, data) => {
     if (err) {
-      console.log('error ' + err);
+      console.log('error inserting questions from seed file: ' + err);
     }
   })
 });
@@ -58,14 +58,14 @@ let seedAnswers = function(n) {
   let seedAnswers = [];
   for (let i = 1; i <= n; i++) {
     for (let j = 0; j < 2; j++) {
-      let thisAnswer = [];
-      thisAnswer.push(faker.name.firstName());
-      thisAnswer.push(faker.random.words(faker.random.number({min: 8, max: 18})) + '.');
+      let answer = [];
+      answer.push(faker.name.firstName());
+      answer.push(faker.random.words(faker.random.number({min: 8, max: 18})) + '.');
       let date = faker.date.past(1).toString();
       date = convertDate(date);
-      thisAnswer.push(date);
-      thisAnswer.push(i);
-      seedAnswers.push(thisAnswer);
+      answer.push(date);
+      answer.push(i);
+      seedAnswers.push(answer);
     }
   }
   return seedAnswers;

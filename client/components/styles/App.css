@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+}
+
+
+.main-container {
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  width: 1080px;
+  padding: 0 30px;
+}

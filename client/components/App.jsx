@@ -1,45 +1,66 @@
 import React from 'react';
-import $ from 'jquery';
+import axios from 'axios';
+import Header from './Header.jsx';
+import Body from './Body.jsx';
+import Ask from './Ask.jsx';
+import './styles/App.css';
 
-const server = 'http://localhost:4000/questions';
+const server = 'http://localhost:4000/20';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      questions: []
+      product: '',
+      questions: [],
+      asking: false
     }
 
     this.loadQuestions = this.loadQuestions.bind(this);
+    this.askQuestion = this.askQuestion.bind(this);
+  }
+
+  askQuestion() {
+    this.setState({asking: true});
+    console.log('clicked');
   }
 
   componentDidMount() {
-    $.ajax({
-      url: server,
-      type: 'GET',
-      success: (data) => {
-        this.loadQuestions(data);
-      },
-      error: (error) => {
-        debugger;
-        console.log('error on get request: ' + error);
-      }
-    })
+    axios.get(server)
+      .then((response) => {
+        console.log(response);
+        this.loadQuestions(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
-  loadQuestions(response) {
-    this.setState = {
-      questions: response
-    }
+  loadQuestions(data) {
+    this.setState({
+      questions: data
+    })
   }
 
 
   render() {
-    return (
-     <h1>Hello World!</h1>
-    )
+    if (!this.state.asking) {
+      return (
+        <div className="main-container">
+          <Header askQuestion={this.askQuestion}length={this.state.questions.length}/>
+          <Body questions={this.state.questions} />
+        </div>
+      )
+    } else {
+      return (
+        <div className="main-container">
+          <Header askQuestion={this.askQuestion} length={this.state.questions.length}/>
+          <Body questions={this.state.questions} />
+          <Ask product={this.state.product}/>
+        </div>
+      )
+    }
   }
- // test
 }
 
 export default App;

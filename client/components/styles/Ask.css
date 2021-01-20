@@ -1,0 +1,151 @@
+@font-face {
+  font-family: 'Balsamiq Sans', cursive;
+  src: url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&display=swap');
+}
+
+@font-face {
+  font-family: 'Ubuntu', sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Ubuntu:wght@700&display=swap');
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.margin-left {
+  margin-left: 5px;
+}
+
+.border-bottom {
+  border-bottom: .5px solid rgb(180, 180, 180);
+}
+
+.left-header {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+}
+
+.ask-display {
+  font-size: 24px;
+  padding: 10px 0 20px;
+}
+
+.required-display {
+  font-size: 13px;
+  padding: 10px 0 15px 11px;
+}
+
+.question-body {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.question-head {
+  margin-left: 18px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.chars {
+  margin-left: 10px;
+}
+
+.x-button {
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  padding: 0 0 1px 1px;
+  margin: 8px 0 0 0;
+  justify-content: center;
+  align-items: center;
+  background-color: gray;
+  border: none;
+  border-radius: 50%;
+  height: 19px;
+  width: 19px;
+  text-align: center;
+}
+
+.question-input,
+.email-input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  width: 1025px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  margin-left: 18px;
+  border-radius: 5px;
+  border: 1px solid rgb(177, 175, 175);
+}
+
+.question-input {
+  height: 116px;
+}
+
+.email-head {
+  margin-top: 11px;
+}
+
+.button-container {
+  margin-top: 14px;
+}
+
+.email-input::-webkit-input-placeholder {
+  padding-top: 7px;
+  padding-left: 12px;
+}
+
+.question-input::-webkit-input-placeholder {
+  padding-left: 12px;
+  padding-top: 5px;
+}
+
+.x-button:hover {
+  background-color: black;
+}
+
+.x {
+  text-align: center;
+}
+
+.checkbox-head {
+  margin: 10px 0 20px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-label {
+  font-size: 12px;
+  margin-left: 9px;
+}
+
+.row-center {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.small-font {
+  font-size: 10px;
+}
+
+.checked {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 5px;
+  border: 1px solid rgb(168, 168, 168);
+}
+
+.checked:focus {
+  outline: none;
+  background-color: blue;
+  color: white;
+}
