@@ -7,14 +7,23 @@ class Question extends React.Component {
     super(props)
     this.state = {
       votes: 0,
-      answers: 0
+      answers: 0,
+      answerDisplay: ''
     }
 
     this.countAnswers = this.countAnswers.bind(this);
   }
 
+
   countAnswers(array) {
-    this.setState({answers: array.length})
+    this.setState({answers: array.length}, () => {
+      if (array.length > 1) {
+        this.setState({ answerDisplay: 'answers' });
+      } else {
+        this.setState({ answerDisplay: 'answer' });
+      }
+    })
+
   }
 
   componentDidMount() {
@@ -37,7 +46,7 @@ class Question extends React.Component {
           </div>
           <div className="right-content">
             <span>{this.state.answers}</span>
-            <span className="ten-font">answers</span>
+            <span className="ten-font">{this.state.answerDisplay}</span>
           </div>
         </div>
           <div className="button-answer">

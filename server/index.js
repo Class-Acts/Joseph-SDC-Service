@@ -23,7 +23,7 @@ app.get('/:id', (req, res) => {
         if (!accumulator[currVal.questions_id]) {
           accumulator[currVal.questions_id] = {
             question: currVal.question,
-            asked_at: currVal.askedAt,
+            asked_at: currVal.asked_at,
             user: currVal.user,
             answers: [{
               answer: currVal.answer,
@@ -42,11 +42,36 @@ app.get('/:id', (req, res) => {
         }
         return accumulator;
       }, {})
-
       res.send(Object.values(questionData));
     }
   })
 });
+
+app.post('/:id', (req, res) => {
+  let myDate = req.body.asked_at;
+  let day = myDate.slice(0, 10);
+  let time = myDate.slice(11, 19);
+  let realDate = day + ' ' + time;
+  let newQuestion = [req.body.user, realDate, req.body.question, req.body.product_id];
+  db.insertQuestion(newQuestion, (err, data) => {
+    if (err) {
+    } else {
+      // db.insertAnswer()
+      let answerData = [
+        'REI Service',
+        'Please be patient while our support staff works on your question. Most questions are answered within 24-48 hours.',
+        realDate,
+        data.insertId
+      ]
+      db.insertAnswer(answerData, (err) => {
+        if (err) {
+          console.log('error seeding new question' + err);
+        }
+      })
+      res.end();
+    }
+  })
+})
 
 
 
@@ -55,33 +80,3 @@ app.listen(PORT, () => {
   console.log('server listening at port: ' + PORT);
 })
 
-// for (let i = 0; i < data.length; i++) {
-//   // create an answer object
-//   let answerObj = {
-//     answer: data[i].answer,
-//     answered_at: data[i].answered_at,
-//     id: data[i].id,
-//     questionId: data[i].questions_id,
-//     user_name: data[i].user_name,
-//     upvotes: data[i].upvotes
-//   }
-//   answers.push(answerObj);
-//   // if there is a new question, create question object
-//   if (data[i - 1] === undefined || data[i].questions_id !== data[i - 1].questions_id) {
-//     let questionObj = {
-//       question: data[i].question,
-//       questionId: data[i].questions_id,
-//       user: data[i].user,
-//       askedAt: data[i].asked_at,
-//       answers: []
-//     }
-//     questions.push(questionObj);
-//   }
-// }
-// for (let i = 0; i < questions.length; i++) {
-//   for (let j = 0; j < answers.length; j++) {
-//     if (answers[j].questionId === questions[i].questionId) {
-//       questions[i].answers.push(answers[j]);
-//     }
-//   }
-// }

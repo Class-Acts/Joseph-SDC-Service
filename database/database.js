@@ -46,7 +46,7 @@ let insertAnswer = function(userInput, callback) {
 }
 
 let getQuestions = function(input, callback) {
-  connection.query('SELECT * FROM questions INNER JOIN answers ON answers.questions_id = questions.id WHERE questions.product_id = ' + input + ';', (err, results) => {
+  connection.query('SELECT * FROM questions LEFT JOIN answers ON answers.questions_id = questions.id WHERE questions.product_id = ' + input + ';', (err, results) => {
     if (err) {
       console.log('error querying db for questions and answers: ' + err);
     } else {

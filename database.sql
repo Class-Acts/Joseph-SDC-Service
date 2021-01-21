@@ -12,7 +12,7 @@ CREATE TABLE products (
 CREATE TABLE questions (
   id int not null auto_increment,
   user VARCHAR(40),
-  asked_at  DATE,
+  asked_at  DATETIME,
   question VARCHAR(300),
   product_id INT NOT NULL,
   PRIMARY KEY (id),
@@ -23,7 +23,7 @@ CREATE TABLE answers (
   id int NOT NULL AUTO_INCREMENT,
   user_name VARCHAR(40),
   answer VARCHAR(300),
-  answered_at DATE,
+  answered_at DATETIME,
   upvotes INT DEFAULT 0,
   questions_id INT NOT NULL,
   PRIMARY KEY (id),

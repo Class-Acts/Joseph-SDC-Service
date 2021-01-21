@@ -81,6 +81,7 @@
   margin-bottom: 18px;
   margin-left: 18px;
   border-radius: 5px;
+  padding: 15px 0 0 15px;
   border: 1px solid rgb(177, 175, 175);
 }
 
@@ -94,16 +95,6 @@
 
 .button-container {
   margin-top: 14px;
-}
-
-.email-input::-webkit-input-placeholder {
-  padding-top: 7px;
-  padding-left: 12px;
-}
-
-.question-input::-webkit-input-placeholder {
-  padding-left: 12px;
-  padding-top: 5px;
 }
 
 .x-button:hover {

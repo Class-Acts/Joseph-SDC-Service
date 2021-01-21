@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import './styles/Ask.css';
 
 class Ask extends React.Component {
@@ -18,10 +19,13 @@ class Ask extends React.Component {
   }
 
   handleClick() {
-    if (this.state.checkbox && this.state.question) {
-      this.setState({ asked_at: new Date()});
-      console.log(this.state);
-    }
+    axios.post('/' + this.state.product_id, this.state)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   handleInputChange(event) {
@@ -30,7 +34,8 @@ class Ask extends React.Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
 
     this.setState({
-      [name]: value
+      [name]: value,
+      asked_at: moment().format()
     });
   }
 
