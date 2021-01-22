@@ -11,7 +11,7 @@ let Body = function(props) {
     <ul className="list">
       {props.questions.map((question, index) => {
         return (
-          <Question key={index} question={question.question} user={question.user} dateAsked={question.asked_at} questionsId={question.questions_id} answers={question.answers}/>
+          <Question key={index} question={question.question} user={question.user} dateAsked={question.asked_at} questionId={question.questionId} answers={question.answers}/>
         )
       })}
     </ul>

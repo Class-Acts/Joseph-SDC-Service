@@ -86,7 +86,7 @@ button:hover {
 
 button:hover {
   -webkit-box-shadow: inset 0px 0px 18px -13px rgba(0,0,0,0.5);
-box-shadow: inset 0px 0px 18px -13px rgba(0,0,0,0.5);
+  box-shadow: inset 0px 0px 18px -13px rgba(0,0,0,0.5);
 }
 
 button {
@@ -109,4 +109,53 @@ button {
 
 .time {
   font-size: 14px !important;
+}
+
+
+
+/* MODAL STYLING */
+
+.my-modal {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  background: rgba(0,0,0,0.5);
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.my-modal .modal-content {
+  background-color: white;
+  height: 940px;
+  width: 1080px;
+  border: 1px solid rgb(173, 173, 173);
+  -webkit-box-shadow: 0px 0px 36px 7px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 36px 7px rgba(0,0,0,0.5);
+}
+
+.my-modal .item {
+  width: 96%;
+  margin: 30px auto;
+  border-top: none;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.my-modal .ask-display {
+  padding: 20px 0 0 10px;
+}
+
+.my-modal .x-button {
+  margin: 2px;
+}
+
+a, a:visited, a:hover, a:active {
+  color: inherit;
+  text-decoration: inherit;
 }

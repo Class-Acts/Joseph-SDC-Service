@@ -21,8 +21,10 @@ class App extends React.Component {
     }
 
     this.myDivToFocus = React.createRef();
+    this.focusOnCancel = React.createRef();
     this.loadQuestions = this.loadQuestions.bind(this);
     this.askQuestion = this.askQuestion.bind(this);
+    this.cancelQuestion = this.cancelQuestion.bind(this);
   }
 
   askQuestion() {
@@ -34,6 +36,14 @@ class App extends React.Component {
         });
       }, 2000)
     })
+  }
+
+  cancelQuestion() {
+    this.setState({asking: false}, () => {
+      this.focusOnCancel.current.scrollIntoView({
+        behavior: 'smooth'
+      })
+    });
   }
 
 
@@ -60,7 +70,7 @@ class App extends React.Component {
   render() {
     if (!this.state.asking) {
       return (
-        <div className="main-container">
+        <div className="main-container" ref={this.focusOnCancel}>
           <Header askQuestion={this.askQuestion} length={this.state.questions.length}/>
           <Body questions={this.state.questions} />
         </div>
@@ -70,11 +80,9 @@ class App extends React.Component {
         <div className="main-container">
           <Header askQuestion={this.askQuestion} length={this.state.questions.length}/>
           <Body questions={this.state.questions} />
-          <ReactModal className="spinner" isOpen={this.state.loading} contentLabel="spinner">
-            {/* <div className="spinner">Hey</div> */}
-          </ReactModal>
+          <ReactModal className="spinner" isOpen={this.state.loading} contentLabel="spinner"></ReactModal>
           <div ref={this.myDivToFocus}>
-            <Ask product={this.state.product}/>
+            <Ask product={this.state.product} cancel={this.cancelQuestion}/>
           </div>
         </div>
       )

@@ -27,32 +27,32 @@ let convertDate = function(str) {
   return newDate;
 }
 
-let seedQuestions = function(n) {
-  let seedQuestions = [];
-  for (let i = 1; i <= n; i++) {
-    for (let j = 0; j < 3; j++) {
-      let dataToSeed = [];
-      dataToSeed.push(faker.name.firstName());
-      let date = faker.date.past(5).toString();
-      date = convertDate(date);
-      dataToSeed.push(date);
-      dataToSeed.push(faker.random.words(faker.random.number({min: 8, max: 20})) + '?');
-      dataToSeed.push(i);
-      seedQuestions.push(dataToSeed);
-    }
-  }
-  return seedQuestions;
-};
+// let seedQuestions = function(n) {
+//   let seedQuestions = [];
+//   for (let i = 1; i <= n; i++) {
+//     for (let j = 0; j < 3; j++) {
+//       let dataToSeed = [];
+//       dataToSeed.push(faker.name.firstName());
+//       let date = faker.date.past(5).toString();
+//       date = convertDate(date);
+//       dataToSeed.push(date);
+//       dataToSeed.push(faker.random.words(faker.random.number({min: 8, max: 20})) + '?');
+//       dataToSeed.push(i);
+//       seedQuestions.push(dataToSeed);
+//     }
+//   }
+//   return seedQuestions;
+// };
 
-let questions = seedQuestions(40);
+// let questions = seedQuestions(40);
 
-questions.forEach((question) => {
-  db.insertQuestion(question, (err, data) => {
-    if (err) {
-      console.log('error inserting questions from seed file: ' + err);
-    }
-  })
-});
+// questions.forEach((question) => {
+//   db.insertQuestion(question, (err, data) => {
+//     if (err) {
+//       console.log('error inserting questions from seed file: ' + err);
+//     }
+//   })
+// });
 
 let seedAnswers = function(n) {
   let seedAnswers = [];

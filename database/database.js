@@ -46,7 +46,7 @@ let insertAnswer = function(userInput, callback) {
 }
 
 let getQuestions = function(input, callback) {
-  connection.query('SELECT * FROM questions LEFT JOIN answers ON answers.questions_id = questions.id WHERE questions.product_id = ' + input + ';', (err, results) => {
+  connection.query('SELECT * FROM questions LEFT JOIN answers ON answers.questions_id = questions.id WHERE questions.product_id = ' + input + ' order by questions.asked_at asc;', (err, results) => {
     if (err) {
       console.log('error querying db for questions and answers: ' + err);
     } else {
@@ -55,9 +55,20 @@ let getQuestions = function(input, callback) {
   })
 }
 
+let updateVotes = function(input, callback) {
+  connection.query('UPDATE answers set upvotes = upvotes + 1 where answerId = ' + input, (err, data) => {
+    if (err) {
+      console.log('error updating votes' + err);
+    } else {
+      callback(null, data);
+    }
+  })
+}
+
 module.exports = {
   insertProduct,
   insertQuestion,
   insertAnswer,
-  getQuestions
+  getQuestions,
+  updateVotes
 }

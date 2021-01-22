@@ -17,7 +17,7 @@ class Header extends React.Component {
           <button onClick={(e) => {e.preventDefault(); this.props.askQuestion()}} className="askHere green-button" type="button">Ask a question</button>
         </div>
         <div className="bottomRow">
-          <span className="showing">1 - 3 of{' '}{this.props.length}{' '}Questions</span>
+          <span className="showing">1 - {' ' + this.props.length} of{' '}{this.props.length}{' '}Questions</span>
           <div className="sort">
             <span className="sortMe">Sort by: </span>
             <button className="sortBy" type="button">Newest Question</button>

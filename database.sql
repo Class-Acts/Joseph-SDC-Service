@@ -20,12 +20,12 @@ CREATE TABLE questions (
 );
 
 CREATE TABLE answers (
-  id int NOT NULL AUTO_INCREMENT,
+  answerId int NOT NULL AUTO_INCREMENT,
   user_name VARCHAR(40),
   answer VARCHAR(300),
   answered_at DATETIME,
   upvotes INT DEFAULT 0,
   questions_id INT NOT NULL,
-  PRIMARY KEY (id),
+  PRIMARY KEY (answerId),
   FOREIGN KEY(questions_id) REFERENCES questions(id)
 );

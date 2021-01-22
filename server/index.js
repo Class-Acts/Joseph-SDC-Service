@@ -19,13 +19,17 @@ app.get('/:id', (req, res) => {
     if (err) {
       console.log('error getting questions from db: ' + err);
     } else {
+      console.log('pre reduce ' + data);
       let questionData = data.reduce((accumulator, currVal) => {
         if (!accumulator[currVal.questions_id]) {
+          let temp = currVal.questions_id;
           accumulator[currVal.questions_id] = {
+            questionId: temp,
             question: currVal.question,
             asked_at: currVal.asked_at,
             user: currVal.user,
             answers: [{
+              id: currVal.answerId,
               answer: currVal.answer,
               answered_at: currVal.answered_at,
               upvotes: currVal.upvotes,
@@ -34,6 +38,7 @@ app.get('/:id', (req, res) => {
           }
         } else {
           accumulator[currVal.questions_id].answers.push({
+            id: currVal.answerId,
             answer: currVal.answer,
             answered_at: currVal.answered_at,
             upvotes: currVal.upvotes,
@@ -42,6 +47,7 @@ app.get('/:id', (req, res) => {
         }
         return accumulator;
       }, {})
+      console.log(questionData);
       res.send(Object.values(questionData));
     }
   })
@@ -68,6 +74,17 @@ app.post('/:id', (req, res) => {
           console.log('error seeding new question' + err);
         }
       })
+      res.end();
+    }
+  })
+})
+
+app.put('/:id', (req, res) => {
+  let answeredAt = req.params.id;
+  db.updateVotes(answeredAt, (err) => {
+    if (err) {
+      console.log('error updating votes');
+    } else {
       res.end();
     }
   })

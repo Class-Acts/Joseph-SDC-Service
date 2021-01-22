@@ -44,7 +44,8 @@
   flex-direction: column;
 }
 
-.question-head {
+.question-head,
+.answer-head {
   margin-left: 18px;
   font-weight: 500;
   font-size: 16px;

@@ -48,7 +48,7 @@ class Ask extends React.Component {
             <span className="required-display">Required fields are marked with *</span>
           </div>
           <div className="right-header">
-            <button type="button" className="x-button">
+            <button onClick={this.props.cancel} type="button" className="x-button">
               <span className="x">x</span>
             </button>
           </div>
