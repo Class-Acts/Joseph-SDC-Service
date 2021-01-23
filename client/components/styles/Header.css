@@ -54,7 +54,7 @@ button:focus {
   border-radius: 2px;
 }
 
-.askHere:hover {
+.green-button:hover {
   color: #225c4e;
   background-color: #c7dfd1;
 }

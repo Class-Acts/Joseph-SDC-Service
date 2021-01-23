@@ -21,7 +21,7 @@ class Ask extends React.Component {
   handleClick() {
     axios.post('/questions/' + this.state.product_id, this.state)
       .then((data) => {
-        console.log(data);
+        this.props.asked();
       })
       .catch((error) => {
         console.log(error);
@@ -74,7 +74,7 @@ class Ask extends React.Component {
               <span className="small-font margin-left">You may receive emails regarding this submission. Any emails will include the ability to opt out of future communications.</span>
             </div>
             <div className="button-container">
-              <button onClick={this.handleClick}className="green-button margin-left">Post question</button>
+              <button onClick={this.handleClick} className="green-button margin-left">Post question</button>
             </div>
           </div>
         </div>
