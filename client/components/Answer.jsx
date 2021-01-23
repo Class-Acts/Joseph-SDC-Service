@@ -41,7 +41,7 @@ class Answer extends React.Component {
 
   render() {
     return (
-      <div className="answer-container">
+      <div className="answer-container-modal">
         <div className="required">Required fields are marked with *</div>
         <div className="answer-me">
           <span>Answer*</span>

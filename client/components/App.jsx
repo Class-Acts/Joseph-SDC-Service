@@ -28,6 +28,8 @@ class App extends React.Component {
     this.cancelQuestion = this.cancelQuestion.bind(this);
     this.wasAsked = this.wasAsked.bind(this);
     this.askedQuestion = this.askedQuestion.bind(this);
+    this.sortByNewest = this.sortByNewest.bind(this);
+    this.changeToNumber = this.changeToNumber.bind(this);
   }
 
   askQuestion() {
@@ -67,17 +69,39 @@ class App extends React.Component {
   componentDidMount() {
     axios.get(server + '/' + this.state.product)
       .then((response) => {
-        console.log(response);
-        this.loadQuestions(response.data)
+        this.loadQuestions(response.data);
       })
       .catch((error) => {
         console.log(error)
       })
   }
 
+  changeToNumber(str) {
+    let re = /-/gi;
+    let reg = /:/gi;
+    let regex = /T/gi;
+    let tempA = str.replace(re, '');
+    tempA = tempA.replace(reg, '');
+    tempA = tempA.replace(regex, '');
+    tempA = parseInt(tempA, 10);
+    return tempA;
+  }
+
+  sortByNewest(array) {
+    array.sort((a, b) => {
+      let newA = this.changeToNumber(a.asked_at);
+      let newB = this.changeToNumber(b.asked_at);
+      return newB - newA;
+    })
+    return array;
+  }
+
   loadQuestions(data) {
     this.setState({
       questions: data
+    }, () => {
+      let newData = this.sortByNewest(this.state.questions);
+      this.setState({ questions: newData })
     })
   }
 
