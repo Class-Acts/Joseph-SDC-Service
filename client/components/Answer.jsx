@@ -9,7 +9,7 @@ class Answer extends React.Component {
     this.state = {
       answer: '',
       answeredAt: '',
-      checkbox: false
+      checkbox: false,
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -27,6 +27,14 @@ class Answer extends React.Component {
   }
 
   handleClick() {
+   axios.post('/answers/' + this.props.questionId, this.state)
+     .then((data) => {
+       this.props.wasAnswered();
+       this.props.popQuestion();
+     })
+     .catch((err) => {
+       console.log(err);
+     })
 
   }
 

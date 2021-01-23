@@ -19,7 +19,7 @@ class Ask extends React.Component {
   }
 
   handleClick() {
-    axios.post('/' + this.state.product_id, this.state)
+    axios.post('/questions/' + this.state.product_id, this.state)
       .then((data) => {
         console.log(data);
       })

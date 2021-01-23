@@ -53,7 +53,7 @@ app.get('/:id', (req, res) => {
   })
 });
 
-app.post('/:id', (req, res) => {
+app.post('/questions/:id', (req, res) => {
   let myDate = req.body.asked_at;
   let day = myDate.slice(0, 10);
   let time = myDate.slice(11, 19);
@@ -75,6 +75,25 @@ app.post('/:id', (req, res) => {
         }
       })
       res.end();
+    }
+  })
+})
+
+app.post('/answers/:id', (req, res) => {
+  let questionId = req.params.id;
+  let answer = req.body.answer;
+  let myDate = req.body.answeredAt;
+  let day = myDate.slice(0, 10);
+  let time = myDate.slice(11, 19);
+  let realDate = day + ' ' + time;
+  let user = 'you';
+  let answerData = ['you', answer, realDate, questionId];
+  db.insertAnswer(answerData, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      res.send(data);
     }
   })
 })

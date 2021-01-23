@@ -17,13 +17,15 @@ class Question extends React.Component {
       answerDisplay: '',
       downVotes: 0,
       highlight: false,
-      loading: false
+      loading: false,
+      answered: false
     }
 
     this.countAnswers = this.countAnswers.bind(this);
     this.upVotes = this.upVotes.bind(this);
     this.downVotes = this.downVotes.bind(this);
     this.popQuestion = this.popQuestion.bind(this);
+    this.wasAnswered = this.wasAnswered.bind(this);
   }
 
 
@@ -42,8 +44,7 @@ class Question extends React.Component {
     this.setState({ votes: this.props.answers[0].upvotes })
   }
 
-  popQuestion(e) {
-    e.preventDefault();
+  popQuestion() {
     if (this.state.highlight) {
       this.setState({highlight: false})
     } else {
@@ -52,6 +53,14 @@ class Question extends React.Component {
           this.setState({ loading: false, highlight: true })
         }, 1000)
       })
+    }
+  }
+
+  wasAnswered() {
+    if (this.state.answered) {
+      this.setState({answered:false})
+    } else {
+      this.setState({ answered: true })
     }
   }
 
@@ -69,6 +78,23 @@ class Question extends React.Component {
   render() {
     return (
       <>
+      <ReactModal className="answered" isOpen={this.state.answered}>
+        <div className="submit-modal">
+          <div className="check-container">
+            <button onClick={this.wasAnswered} type="button" className="x-button">
+              <span className="x">x</span>
+            </button>
+          </div>
+          <div className="image-container">
+            <div>
+              <img className="checkbox-green" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfgg_Ow5Vww9CgzIezCKmTt0wa5up2ole-gNKcPlMGwHIcVV8&s" alt="green check mark"></img>
+            </div>
+            <div>
+              <span>Your answer was submitted!</span>
+            </div>
+          </div>
+        </div>
+      </ReactModal>
       <ReactModal className="spinner" isOpen={this.state.loading} contentLabel="spinner"></ReactModal>
       <li className="item">
         <div className="content-header">
@@ -142,7 +168,7 @@ class Question extends React.Component {
             )
           })}
         </li>
-        <Answer questionId={this.props.questionId}/>
+        <Answer wasAnswered={this.wasAnswered} popQuestion={this.popQuestion} questionId={this.props.questionId}/>
       </div>
       </ReactModal>
       </>

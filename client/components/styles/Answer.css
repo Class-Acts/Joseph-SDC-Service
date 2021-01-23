@@ -43,3 +43,7 @@
   border-color: rgb(182, 182, 182);
   margin: 0px;
 }
+
+.answer-container .button-container {
+  margin-bottom: 20px;
+}

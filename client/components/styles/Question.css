@@ -127,13 +127,14 @@ button {
   -webkit-font-smoothing: antialiased;
 }
 
-.my-modal .modal-content {
+.modal-content {
   background-color: white;
-  height: 940px;
   width: 1080px;
   border: 1px solid rgb(173, 173, 173);
   -webkit-box-shadow: 0px 0px 36px 7px rgba(0,0,0,0.5);
   box-shadow: 0px 0px 36px 7px rgba(0,0,0,0.5);
+  max-height: 95%;
+  overflow: auto;
 }
 
 .my-modal .item {
@@ -152,10 +153,55 @@ button {
 }
 
 .my-modal .x-button {
-  margin: 2px;
+  position: relative;
+  top: 15px;
+  right: 15px;
 }
 
 a, a:visited, a:hover, a:active {
   color: inherit;
   text-decoration: inherit;
+}
+
+.answered {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  background: rgba(0,0,0,0.5);
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.submit-modal {
+  height: 290px;
+  width: 1080px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-shadow: 5px 5px 30px -3px #000000;
+  box-shadow: 5px 5px 30px -3px #000000;
+}
+
+.check-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 8px;
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  align-items: center;
+  margin: 62px;
+}
+
+.checkbox-green {
+  height: 95px;
+  width: 95px;
 }
