@@ -4,9 +4,6 @@ import './styles/Body.css';
 
 let Body = function(props) {
 
-
-
-
   return (
     <ul className="list">
       {props.questions.map((question, index) => {
@@ -16,7 +13,6 @@ let Body = function(props) {
       })}
     </ul>
   )
-
 }
 
 export default Body;

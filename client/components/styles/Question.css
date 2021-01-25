@@ -8,6 +8,8 @@
   border-top: 1px #b8b8b8 solid;
   padding-top: 16px;
   color: #292929;
+  position: relative;
+  z-index: 1;
 }
 
 .content-header {

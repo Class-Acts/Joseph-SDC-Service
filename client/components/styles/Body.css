@@ -1,4 +1,26 @@
 ul {
   padding: 10px 0px;
   margin: 0 0 0 0;
+  position: relative;
+  z-index: 1;
+}
+
+
+.modal-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sorter-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-modal {
+  outline: none;
+  border: none;
+  width: 300px;
+  margin: 300px auto;
+  background-color: transparent;
 }

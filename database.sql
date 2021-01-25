@@ -10,7 +10,7 @@ CREATE TABLE products (
 );
 
 CREATE TABLE questions (
-  id int not null auto_increment,
+  questionId int not null auto_increment,
   user VARCHAR(40),
   asked_at  DATETIME,
   question VARCHAR(300),

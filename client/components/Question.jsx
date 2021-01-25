@@ -12,16 +12,15 @@ class Question extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      votes: 0,
-      answers: 0,
       answerDisplay: '',
+      answers: 0,
+      votes: 0,
       downVotes: 0,
       highlight: false,
       loading: false,
       answered: false
     }
 
-    this.countAnswers = this.countAnswers.bind(this);
     this.upVotes = this.upVotes.bind(this);
     this.downVotes = this.downVotes.bind(this);
     this.popQuestion = this.popQuestion.bind(this);
@@ -29,19 +28,33 @@ class Question extends React.Component {
   }
 
 
-  countAnswers(array) {
-    this.setState({answers: array.length}, () => {
-      if (array.length > 1) {
-        this.setState({ answerDisplay: 'answers' });
-      } else {
-        this.setState({ answerDisplay: 'answer' });
-      }
+
+  componentDidMount() {
+    let answersLength = this.props.answers.length;
+    this.setState({
+      answers: answersLength,
+      votes: this.props.answers[0].upvotes
     })
   }
 
-  componentDidMount() {
-    this.countAnswers(this.props.answers);
-    this.setState({ votes: this.props.answers[0].upvotes })
+  componentDidUpdate(prevAnswers) {
+    if (this.props.answers.length !== prevAnswers.answers.length) {
+      let answersLength = this.props.answers.length;
+      this.setState({
+        answers: answersLength
+      }, () => {
+        if (this.state.answers > 1) {
+          this.setState({ answerDisplay: 'answers' })
+        } else {
+          this.setState({ answerDisplay: 'answer' })
+        }
+      })
+    }
+    if (this.props.answers[0].upvotes !== prevAnswers.answers[0].upvotes) {
+      this.setState({
+        votes: this.props.answers[0].upvotes
+      })
+    }
   }
 
   popQuestion() {
@@ -67,7 +80,10 @@ class Question extends React.Component {
   upVotes() {
     axios.put('/' + this.props.answers[0].id)
       .then(() => {
-        this.setState({ votes: this.state.votes + 1 })
+        let newVotes = this.state.votes + 1;
+        this.setState({
+          votes: newVotes
+        });
       })
   }
 

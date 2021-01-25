@@ -18,7 +18,7 @@ class App extends React.Component {
       questions: [],
       asking: false,
       loading: false,
-      asked: false
+      asked: false,
     }
 
     this.myDivToFocus = React.createRef();
@@ -128,7 +128,7 @@ class App extends React.Component {
             </div>
           </ReactModal>
           <Header askQuestion={this.askQuestion} length={this.state.questions.length}/>
-          <Body questions={this.state.questions} />
+          <Body questions={this.state.questions} isSorting={this.state.sorting}/>
         </div>
       )
     } else {

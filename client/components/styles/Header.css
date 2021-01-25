@@ -23,6 +23,8 @@ button:focus {
 
 .header {
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .QnA {
@@ -63,14 +65,63 @@ button:focus {
   padding: 10px;
 }
 
+.sort-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 250px;
+  padding-right: 10px;
+}
+
+.arrow {
+  margin-top: 7px;
+  margin-left: 5px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgb(65, 64, 64);
+}
+
 .sort {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin-right: 11px;
+}
+
+.sort-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin-top: 30px;
+  margin-right: -20px;
+  z-index: 4;
+  height: 200px;
+  width: 200px;
+  background-color: white;
+  border: 1px #b8b8b8 solid;
+}
+
+.sort-option {
+  width: 200px;
+  height: 100px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  text-align: left;
+  margin: 0 0 0 0;
+}
+
+.sort-option:hover {
+  box-shadow: none;
+  color: #225c4e;
+  background-color: #c7dfd1;
 }
 
 .bottomRow {
+  position: relative;
+  z-index: 3;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -79,6 +130,10 @@ button:focus {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   font-weight: 400;
+}
+
+.sortMe {
+  width: 25%;
 }
 
 .sortBy {
@@ -97,13 +152,5 @@ button:focus {
 
 .sortBy:focus {
   outline: none;
-}
-
-.arrow-down {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid black;
 }
 
