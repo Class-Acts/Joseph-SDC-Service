@@ -16,6 +16,7 @@ class App extends React.Component {
     this.state = {
       product: 20,
       questions: [],
+      sortedBy: 'Newest questions',
       asking: false,
       loading: false,
       asked: false,
@@ -30,6 +31,7 @@ class App extends React.Component {
     this.askedQuestion = this.askedQuestion.bind(this);
     this.sortByNewest = this.sortByNewest.bind(this);
     this.changeToNumber = this.changeToNumber.bind(this);
+    this.sortBy = this.sortBy.bind(this);
   }
 
   askQuestion() {
@@ -96,6 +98,10 @@ class App extends React.Component {
     return array;
   }
 
+  sortBy(str) {
+    this.setState({ sortedBy: str });
+  }
+
   loadQuestions(data) {
     this.setState({
       questions: data
@@ -127,7 +133,7 @@ class App extends React.Component {
               </div>
             </div>
           </ReactModal>
-          <Header askQuestion={this.askQuestion} length={this.state.questions.length}/>
+          <Header askQuestion={this.askQuestion} length={this.state.questions.length} sortBy={this.sortBy} sortedBy={this.state.sortedBy}/>
           <Body questions={this.state.questions} isSorting={this.state.sorting}/>
         </div>
       )

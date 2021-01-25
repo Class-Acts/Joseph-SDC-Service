@@ -7,8 +7,9 @@ class Header extends React.Component {
     super(props);
     this.state = {
       sorting: false,
-      sortedBy: 'Newest questions',
+      sortedBy: this.props.sortedBy,
       sortOptions: [
+        'Newest questions',
         'Most answered',
         'Newest answers',
         'Most answered',
@@ -17,6 +18,7 @@ class Header extends React.Component {
       ]
     };
     this.isSorting = this.isSorting.bind(this);
+    this.setSort = this.setSort.bind(this);
   }
 
   isSorting() {
@@ -25,6 +27,22 @@ class Header extends React.Component {
     } else {
       this.setState({sorting: false})
     }
+  }
+
+  componentDidMount() {
+    this.setState({sortedBy: this.props.sortedBy })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.sortedBy !== this.props.sortedBy) {
+      this.setState({ sortedBy: this.props.sortedBy })
+    }
+  }
+
+  setSort(e) {
+    let target = e.target;
+    let name = target.name;
+    this.props.sortBy(name);
   }
 
   render() {
@@ -65,7 +83,7 @@ class Header extends React.Component {
             <div className="sort-menu" onMouseLeave={this.isSorting}>
               {this.state.sortOptions.map((option, index) => {
                 return (
-                  <button key={index} type="button" name={option} className="sort-option">{option}</button>
+                  <button onClick={this.setSort} key={index} type="button" name={option} className="sort-option">{option}</button>
                 )
               })}
             </div>
