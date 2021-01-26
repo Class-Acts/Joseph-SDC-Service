@@ -1,0 +1,53 @@
+@font-face {
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+}
+
+
+.main-container {
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  width: 1080px;
+  padding: 0 30px;
+}
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  border-top-color: #000;
+  animation: spinner .6s linear infinite;
+  z-index: 10;
+
+}
+
+.modal {
+  height: 50px;
+  width: 50px;
+}
+
+.asked {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  outline: none;
+  background: rgba(0,0,0,0.5);
+  font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
