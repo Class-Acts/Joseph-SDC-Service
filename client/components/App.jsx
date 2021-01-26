@@ -10,6 +10,10 @@ const server = 'http://localhost:4000';
 
 ReactModal.setAppElement('#app');
 
+const customModalStyles = {
+  overlay: {zIndex: 1000}
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -29,9 +33,91 @@ class App extends React.Component {
     this.cancelQuestion = this.cancelQuestion.bind(this);
     this.wasAsked = this.wasAsked.bind(this);
     this.askedQuestion = this.askedQuestion.bind(this);
-    this.sortByNewest = this.sortByNewest.bind(this);
-    this.changeToNumber = this.changeToNumber.bind(this);
     this.sortBy = this.sortBy.bind(this);
+    this.changeToNumber = this.changeToNumber.bind(this);
+    this.sortByNewest = this.sortByNewest.bind(this);
+    this.sortByMostAnswered = this.sortByMostAnswered.bind(this);
+    this.sortByNewest = this.sortByNewest.bind(this);
+    this.sortByMostHelpfulAnswers = this.sortByMostHelpfulAnswers.bind(this);
+    this.sortByAnswersNeeded = this.sortByAnswersNeeded.bind(this);
+    this.sortByNewestAnswers = this.sortByNewestAnswers.bind(this);
+    this.sortAllQuestions = this.sortAllQuestions.bind(this);
+  }
+
+  sortByNewest(array) {
+    array.sort((a, b) => {
+      let newA = this.changeToNumber(a.asked_at);
+      let newB = this.changeToNumber(b.asked_at);
+      return newB - newA;
+    })
+    return array;
+  }
+
+  sortByMostAnswered(array) {
+    let sorted = array.sort((a, b) => {
+      return b.answers.length - a.answers.length;
+    })
+    return sorted;
+  }
+
+  sortByNewestAnswers(array) {
+    let sorted = array.sort((a, b) => {
+      let newA = this.changeToNumber(a.answers[0].answered_at);
+      let newB = this.changeToNumber(b.answers[0].answered_at);
+      return newB - newA;
+    })
+    return sorted;
+  }
+
+  sortByAnswersNeeded(array) {
+    let sorted = array.sort((a, b) => {
+      return a.answers.length = b.answers.length;
+    })
+    return sorted;
+  }
+
+  sortByMostHelpfulAnswers(array) {
+    let sorted = array.sort((a, b) => {
+      return b.answers[0].upvotes - a.answers[0].upvotes;
+    })
+    return sorted;
+  }
+
+  sortAllQuestions() {
+    if (this.state.sortedBy === 'Newest questions') {
+      let newQuestions = this.sortByNewest(this.state.questions);
+      this.setState({questions: newQuestions});
+    } else if (this.state.sortedBy === 'Most answered') {
+      let newQuestions = this.sortByMostAnswered(this.state.questions);
+      this.setState({questions: newQuestions});
+    } else if (this.state.sortedBy === 'Newest answers') {
+      let newQuestions = this.sortByNewestAnswers(this.state.questions);
+      this.setState({questions: newQuestions});
+    } else if (this.state.sortedBy === 'Answers needed') {
+      let newQuestions = this.sortByAnswersNeeded(this.state.questions);
+      this.setState({questions: newQuestions});
+    } else {
+      let newQuestions = this.sortByMostHelpfulAnswers(this.state.questions);
+      this.setState({questions: newQuestions});
+    }
+  }
+
+
+  loadQuestions(data) {
+    let newData = this.sortByNewest(data);
+    this.setState({
+      questions: newData
+    })
+  }
+
+  componentDidMount() {
+    axios.get(server + '/' + this.state.product)
+      .then((response) => {
+        this.loadQuestions(response.data);
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   askQuestion() {
@@ -68,14 +154,10 @@ class App extends React.Component {
     this.setState({ asked: false });
   }
 
-  componentDidMount() {
-    axios.get(server + '/' + this.state.product)
-      .then((response) => {
-        this.loadQuestions(response.data);
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+  sortBy(input) {
+    this.setState({ sortedBy: input }, () => {
+      this.sortAllQuestions();
+    });
   }
 
   changeToNumber(str) {
@@ -98,25 +180,11 @@ class App extends React.Component {
     return array;
   }
 
-  sortBy(str) {
-    this.setState({ sortedBy: str });
-  }
-
-  loadQuestions(data) {
-    this.setState({
-      questions: data
-    }, () => {
-      let newData = this.sortByNewest(this.state.questions);
-      this.setState({ questions: newData })
-    })
-  }
-
-
   render() {
     if (!this.state.asking) {
       return (
         <div className="main-container" ref={this.focusOnCancel}>
-           <ReactModal className="asked" isOpen={this.state.asked}>
+           <ReactModal className="asked" isOpen={this.state.asked} style={customModalStyles}>
              <div className="submit-modal">
               <div className="check-container">
                 <button onClick={this.wasAsked} type="button" className="x-button">
@@ -134,15 +202,15 @@ class App extends React.Component {
             </div>
           </ReactModal>
           <Header askQuestion={this.askQuestion} length={this.state.questions.length} sortBy={this.sortBy} sortedBy={this.state.sortedBy}/>
-          <Body questions={this.state.questions} isSorting={this.state.sorting}/>
+          <Body questions={this.state.questions} changeNumber={this.changeToNumber}/>
         </div>
       )
     } else {
       return (
         <div className="main-container">
           <Header askQuestion={this.askQuestion} length={this.state.questions.length}/>
-          <Body questions={this.state.questions} />
-          <ReactModal className="spinner" isOpen={this.state.loading} contentLabel="spinner"></ReactModal>
+          <Body questions={this.state.questions} sortedBy={this.state.sortedBy} changeNumber={this.changeNumber}/>
+          <ReactModal className="spinner" isOpen={this.state.loading} contentLabel="spinner" style={customModalStyles}></ReactModal>
           <div ref={this.myDivToFocus}>
             <Ask product={this.state.product} cancel={this.cancelQuestion} asked={this.askedQuestion}/>
           </div>

@@ -10,7 +10,6 @@ class Header extends React.Component {
       sortedBy: this.props.sortedBy,
       sortOptions: [
         'Newest questions',
-        'Most answered',
         'Newest answers',
         'Most answered',
         'Answers needed',

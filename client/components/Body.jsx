@@ -4,6 +4,7 @@ import './styles/Body.css';
 
 let Body = function(props) {
 
+
   return (
     <ul className="list">
       {props.questions.map((question, index) => {

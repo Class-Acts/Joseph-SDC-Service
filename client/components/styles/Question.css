@@ -12,6 +12,11 @@
   z-index: 1;
 }
 
+.answered {
+  position: absolute;
+  z-index: 5;
+}
+
 .content-header {
   display: flex;
   justify-content: space-between;

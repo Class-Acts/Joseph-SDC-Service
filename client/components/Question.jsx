@@ -8,6 +8,10 @@ import Answer from './Answer.jsx';
 
 ReactModal.setAppElement('#app');
 
+const customModalStyles = {
+  overlay: {zIndex: 1000}
+}
+
 class Question extends React.Component {
   constructor(props) {
     super(props)
@@ -94,7 +98,7 @@ class Question extends React.Component {
   render() {
     return (
       <>
-      <ReactModal className="answered" isOpen={this.state.answered}>
+      <ReactModal className="answered" isOpen={this.state.answered} style={customModalStyles}>
         <div className="submit-modal">
           <div className="check-container">
             <button onClick={this.wasAnswered} type="button" className="x-button">
@@ -111,7 +115,7 @@ class Question extends React.Component {
           </div>
         </div>
       </ReactModal>
-      <ReactModal className="spinner" isOpen={this.state.loading} contentLabel="spinner"></ReactModal>
+      <ReactModal className="spinner" isOpen={this.state.loading} contentLabel="spinner" style={customModalStyles}></ReactModal>
       <li className="item">
         <div className="content-header">
           <div className="left-content">
@@ -149,7 +153,7 @@ class Question extends React.Component {
           </div>
         </div>
       </li>
-      <ReactModal questionId={this.props.questionId} className="my-modal" isOpen={this.state.highlight}>
+      <ReactModal questionId={this.props.questionId} className="my-modal" isOpen={this.state.highlight} style={customModalStyles}>
         <div className="modal-content">
           <div className="modal-header">
             <div className="left-header">
@@ -194,20 +198,3 @@ class Question extends React.Component {
 }
 
 export default Question;
-
-          // <div className="answer-container">
-          //   <div className="answer-content">
-          //     <span className="user">{this.props.answers[0].user_name}</span>
-          //     <span className="dot">&#8226;</span>
-          //     <span className="time">{moment(this.props.answers[0].answered_at).fromNow()}</span>
-          //   </div>
-          //   <div className="answer">
-          //     <span>{this.props.answers[0].answer}</span>
-          //   </div>
-          //   <div className="helpful">
-          //     <span className="ten-font">Helpful?</span>
-          //     <button type="button" onClick={this.upVotes}>Yes &#8226; {' '}{this.state.votes}</button>
-          //     <button type="button" onClick={this.downVotes}>No &#8226; {' '}{this.state.downVotes}</button>
-          //     <button type="button">Report as inappropriate</button>
-          //   </div>
-          // </div>
