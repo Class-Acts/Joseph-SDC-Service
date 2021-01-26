@@ -16,7 +16,7 @@ class Question extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      answerDisplay: this.props.answers.length > 1 ? 'answers': 'answer',
+      answerDisplay: this.props.answers.length > 1 ? 'answers' : 'answer',
       answers: this.props.answers.length,
       votes: 0,
       downVotes: 0,
@@ -131,7 +131,7 @@ class Question extends React.Component {
                   <span className="time">{moment(this.props.dateAsked).fromNow()}</span>
                 </div>
                 <div className="question">
-                  <h3><a href="#" onClick={this.popQuestion}>{this.props.question}</a></h3>
+                  <h3 className="paul-h3"><a className="paul-a" href="#" onClick={this.popQuestion}>{this.props.question}</a></h3>
                 </div>
               </div>
               <div className="right-content">

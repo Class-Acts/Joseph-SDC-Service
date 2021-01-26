@@ -4,10 +4,12 @@ const app = express();
 const db = require('../database/database.js');
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
 
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+app.use(cors());
 app.use(jsonParser);
 app.use(urlencodedParser);
 app.use(express.static(path.join(__dirname, '..', 'dist')));

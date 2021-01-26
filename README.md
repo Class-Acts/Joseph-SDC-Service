@@ -1,6 +1,6 @@
-# Project Name
+# RGI Questions and Answers Module
 
-> Project description
+> A module aimed at cloning the styles and functionality of the REI website's question and answers section on a product page.
 
 ## Related Projects
 
@@ -17,7 +17,9 @@
 
 ## Usage
 
-> Some usage instructions
+> To start the server: npm start
+> To run webpack and watch files for changes: npm run watch
+> To seed the database: npm run db:setup
 
 ## Requirements
 
