@@ -27,7 +27,7 @@ class Answer extends React.Component {
   }
 
   handleClick() {
-   axios.post('/answers/' + this.props.questionId, this.state)
+   axios.post('http://localhost:4000/answers/' + this.props.questionId, this.state)
      .then((data) => {
        this.props.wasAnswered();
        this.props.popQuestion();

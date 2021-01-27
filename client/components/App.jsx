@@ -6,8 +6,6 @@ import Ask from './Ask.jsx';
 import './styles/App.css';
 import ReactModal from 'react-modal';
 
-const server = 'http://localhost:4000';
-
 ReactModal.setAppElement('#app');
 
 const customModalStyles = {
@@ -111,7 +109,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(server + '/' + this.state.product)
+    axios.get('http://localhost:4000/' + this.state.product)
       .then((response) => {
         this.loadQuestions(response.data);
       })
