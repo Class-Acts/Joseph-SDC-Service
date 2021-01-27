@@ -10,7 +10,8 @@
   display: flex;
   flex-direction: column;
   width: 1080px;
-  padding: 0 30px;
+  margin: 0 auto;
+  padding: 30px 30px;
 }
 
 @keyframes spinner {
