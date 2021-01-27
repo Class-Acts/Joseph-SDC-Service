@@ -108,6 +108,10 @@ button:hover {
   border-radius: 2px;
 }
 
+.item button:focus {
+  outline: none;
+}
+
 .helpful {
   padding-top: 34px;
   padding-left: 18px;
