@@ -15,7 +15,7 @@ app.use(urlencodedParser);
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 
-app.get('http://localhost:4000/:id', (req, res) => {
+app.get('/:id', (req, res) => {
   let product = req.params.id;
   db.getQuestions(product, (err, data) => {
     if (err) {
@@ -55,7 +55,7 @@ app.get('http://localhost:4000/:id', (req, res) => {
   })
 });
 
-app.post('http://localhost:4000/questions/:id', (req, res) => {
+app.post('/questions/:id', (req, res) => {
   let myDate = req.body.asked_at;
   let day = myDate.slice(0, 10);
   let time = myDate.slice(11, 19);
@@ -81,7 +81,7 @@ app.post('http://localhost:4000/questions/:id', (req, res) => {
   })
 })
 
-app.post('http://localhost:4000/answers/:id', (req, res) => {
+app.post('/answers/:id', (req, res) => {
   let questionId = req.params.id;
   let answer = req.body.answer;
   let myDate = req.body.answeredAt;
@@ -100,7 +100,7 @@ app.post('http://localhost:4000/answers/:id', (req, res) => {
   })
 })
 
-app.put('http://localhost:4000/:id', (req, res) => {
+app.put('/:id', (req, res) => {
   let answeredAt = req.params.id;
   db.updateVotes(answeredAt, (err) => {
     if (err) {
