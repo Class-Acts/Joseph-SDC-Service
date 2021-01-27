@@ -20,6 +20,10 @@
 > To start the server: npm start
 > To run webpack and watch files for changes: npm run watch
 > To seed the database: npm run db:setup
+> To add to your index.html file
+    - <div id="questions"></div>
+    - <script src="http://localhost:4000/bundle.js"></script>
+
 
 ## Requirements
 

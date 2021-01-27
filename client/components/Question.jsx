@@ -6,7 +6,7 @@ import ReactModal from 'react-modal';
 import Answers from './Answers.jsx';
 import Answer from './Answer.jsx';
 
-ReactModal.setAppElement('#app');
+ReactModal.setAppElement('#questions');
 
 const customModalStyles = {
   overlay: { zIndex: 1000 }
