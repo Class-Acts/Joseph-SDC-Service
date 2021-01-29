@@ -17,9 +17,9 @@ connection.connect((err) => {
 let createSchema = function() {
   connection.query('CREATE DATABASE IF NOT EXISTS rgidata;');
   connection.query('USE rgidata;');
-  connection.query('CREATE TABLE IF NOT EXISTS products( id INT NOT NULL AUTO_INCREMENT, product_name VARCHAR(40), PRIMARY KEY(id));');
+  connection.query('CREATE TABLE IF NOT EXISTS products( id INT NOT NULL AUTO_INCREMENT, product_name VARCHAR(100), PRIMARY KEY(id));');
   connection.query('CREATE TABLE IF NOT EXISTS questions (questionId int not null auto_increment, user VARCHAR(40),asked_at  DATETIME, question VARCHAR(300), product_id INT NOT NULL, PRIMARY KEY(questionId), FOREIGN KEY (product_id) REFERENCES products(id));');
-  connection.query('CREATE TABLE IF NOT EXISTS ANSWERS( answerId int NOT NULL AUTO_INCREMENT, user_name VARCHAR(40), answer VARCHAR(300), answered_at DATETIME, upvotes INT DEFAULT 0,questions_id INT NOT NULL, PRIMARY KEY (answerId), FOREIGN KEY(questions_id) REFERENCES questions(questionId));');
+  connection.query('CREATE TABLE IF NOT EXISTS answers( answerId int NOT NULL AUTO_INCREMENT, user_name VARCHAR(40), answer VARCHAR(300), answered_at DATETIME, upvotes INT DEFAULT 0,questions_id INT NOT NULL, PRIMARY KEY (answerId), FOREIGN KEY(questions_id) REFERENCES questions(questionId));');
 }
 
 createSchema();
