@@ -15,44 +15,49 @@ app.use(urlencodedParser);
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 
+
 app.get('/:id', (req, res) => {
   let product = req.params.id;
-  db.getQuestions(product, (err, data) => {
-    if (err) {
-      console.log('error getting questions from db: ' + err);
-    } else {
-      console.log('pre reduce ' + data);
-      let questionData = data.reduce((accumulator, currVal) => {
-        if (!accumulator[currVal.questions_id]) {
-          let temp = currVal.questions_id;
-          accumulator[currVal.questions_id] = {
-            questionId: temp,
-            question: currVal.question,
-            asked_at: currVal.asked_at,
-            user: currVal.user,
-            answers: [{
+  debugger;
+  if (product !== 'favicon.ico') {
+    db.getQuestions(product, (err, data) => {
+      if (err) {
+        console.log('error getting questions from db: ' + err);
+      } else {
+        let questionData = data.reduce((accumulator, currVal) => {
+          if (!accumulator[currVal.questions_id]) {
+            let temp = currVal.questions_id;
+            accumulator[currVal.questions_id] = {
+              questionId: temp,
+              question: currVal.question,
+              asked_at: currVal.asked_at,
+              user: currVal.user,
+              answers: [{
+                id: currVal.answerId,
+                answer: currVal.answer,
+                answered_at: currVal.answered_at,
+                upvotes: currVal.upvotes,
+                user_name: currVal.user_name
+              }]
+            }
+          } else {
+            accumulator[currVal.questions_id].answers.push({
               id: currVal.answerId,
               answer: currVal.answer,
               answered_at: currVal.answered_at,
               upvotes: currVal.upvotes,
               user_name: currVal.user_name
-            }]
+            })
           }
-        } else {
-          accumulator[currVal.questions_id].answers.push({
-            id: currVal.answerId,
-            answer: currVal.answer,
-            answered_at: currVal.answered_at,
-            upvotes: currVal.upvotes,
-            user_name: currVal.user_name
-          })
-        }
-        return accumulator;
-      }, {})
-      console.log(questionData);
-      res.send(Object.values(questionData));
-    }
-  })
+          return accumulator;
+        }, {})
+        console.log(questionData);
+        res.send(Object.values(questionData));
+      }
+    })
+  } else {
+    console.log('shut the favico up!');
+  }
 });
 
 app.post('/questions/:id', (req, res) => {
@@ -64,7 +69,6 @@ app.post('/questions/:id', (req, res) => {
   db.insertQuestion(newQuestion, (err, data) => {
     if (err) {
     } else {
-      // db.insertAnswer()
       let answerData = [
         'REI Service',
         'Please be patient while our support staff works on your question. Most questions are answered within 24-48 hours.',
