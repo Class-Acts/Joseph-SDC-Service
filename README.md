@@ -2,12 +2,29 @@
 
 > An backend database project that extends the RGI frontend with 10 million primary records store on a Microsoft SQL Server Database, utilizing T-SQL commands. 
 
-## Installation
+# Installation
 
-1. Follow the instructions to install sql server for your operating system.
+## Microsoft Server Installation
+1. Follow the instructions to install sql server for your operating system. I used linux, but if you use a different operating system, follow Microsoft's guide for installation:
 > https://docs.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server?view=sql-server-2017
 
-1. From within the root directory:
+For Ubuntu users:
+> https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-linux-2017
+
+Extra Resources:
+> https://www.microsoft.com/en-us/sql-server/developer-get-started/node/ubuntu/?rtc=1
+
+The above guides should have specific steps for the next steps
+
+2. Install the SQL Server command-line tools
+3. Connect Locally
+4. Verify that you can create databases and insert tables
+> Commands must be written in T-SQL. T-SQL commands are not executed until you type GO on a new line.
+
+> Note that this project uses the npm package tedious to interact with the sqlcmd database instance. It also uses ms-sqlcmd to simplify use of the tedious package.
+
+## Project Installation
+From within the root directory:
 ```
 npm install
 ```
