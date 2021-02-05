@@ -1,4 +1,18 @@
-# RGI Questions and Answers Module
+# Server Development Capstone for RGI
+
+> An backend database project that extends the RGI frontend with 10 million primary records store on a Microsoft SQL Server Database, utilizing T-SQL commands. 
+
+## Installation
+
+1. Follow the instructions to install sql server for your operating system.
+> https://docs.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server?view=sql-server-2017
+
+1. From within the root directory:
+```
+npm install
+```
+
+# RGI Front-end Questions and Answers Module
 
 > A module aimed at cloning the styles and functionality of the REI website's question and answers section on a product page.
 
