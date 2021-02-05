@@ -1,10 +1,16 @@
 const express = require('express');
 const PORT = 4000;
 const app = express();
-const db = require('../database/database.js');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
+var db;
+
+if (process.argv[2] === undefined || process.argv[2] === '-sqlcmd') {
+  db = require('../database/sqlcmd/database.js');
+} else if (process.argv[2] === '-mysql') {
+  db = require('../database/mysql/database.js');
+}
 
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
