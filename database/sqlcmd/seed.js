@@ -1,6 +1,21 @@
 const db = require('./database.js');
 const faker = require('faker');
 
+//Generates one product
+//for each product, 0-6 questions.
+//  -10% chance of 0 or 7
+//  -20% chance of 1 or 6
+//  -30% chance of 2 or 5
+//  -40% chance of 3 or 4
+//for each question, 0-4 answers
+//  -20% chance of 0
+//  -40% chance of 1
+//  -40% chance of 2, 3 or 4
+//
+
+// Legacy code generated:
+// 100 questions indexed
+// 1 p 1-100, 1 q 1-100, 2 a 1-300
 let producer = () => {
   let product = {};
 
