@@ -1,11 +1,13 @@
 const express = require('express');
-const PORT = 4000;
+const PORT = 4001;
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 var db;
 
+
+//Allow connecting to two different databases based on command line argument
 if (process.argv[2] === undefined || process.argv[2] === '-sqlcmd') {
   db = require('../database/sqlcmd/database.js');
   console.log('Connecting to t-sql db');

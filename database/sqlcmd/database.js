@@ -1,86 +1,68 @@
-// const sql = require('mssql')
-// const config = {
-//   user: 'student',
-//   password: 'Qandapass1234',
-//   server: 'localhost', // You can use 'localhost\\instance' to connect to named instance
-//   database: 'qanda',
-// };
+const sql = require('mssql');
+const dbOptions = {
+  path: './data/'
+};
 
-
-// async () => {
-//     try {
-//         // make sure that any items are correctly URL encoded in the connection string
-//         await sql.connect('mssql://student:Qandapass1234@localhost/qanda')
-//         const result = await sql.query`select * from Products where id = ${value}`
-//         console.dir(result)
-//     } catch (err) {
-//         // ... error checks
-//     }
-// }
-
-const {Connection, Request, TYPES} = require('tedious');
-
-// Create connection to database
-var config = {
+const config = {
+  user: 'student',
+  password: 'Qandapass1234',
   server: 'localhost',
-  authentication: {
-      type: 'default',
-      options: {
-          userName: 'student',
-          password: 'Qandapass1234'
-      }
+  database: 'qanda',
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
   },
-  options: {
-      database: 'qanda',
-      trustServerCertificate: true
-  }
-}
-// var config = {
-//   server: 'localhost',
-//   authentication: {
-//       type: 'default',
-//       options: {
-//           userName: 'student', // update me
-//           password: 'Qandapass1234' // update me
-//           trustServerCertificate: true
-//       }
-//   },
-//   options: {
-//       database: 'qanda'
-//   }
-// }
-var connection = new Connection(config);
+  stream: true
+};
 
-// Attempt to connect and execute queries if connection goes through
-connection.on('connect', function(err) {
-  if(err) {
-    console.log('Error: ', err)
-  } else {
-    // If no error, then good to go...
-    executeStatement();
-  }
-});
+//Enables error handler on connections.
+sql.on('error', err => {
+  console.log(err);
+})
 
-connection.connect();
+let makeQuery = (queryTemplate, input, pattern) => {
+  return (input, callback) => {
+    sql.connect(config)
+      .then(pool => {
+        return pool.request()
+          .query(queryTemplate(input));
+      })
+      .then(result => {
+        if (pattern) {
+          callback(null, pattern(result));
+        }
+      })
+      .catch(err => {
+        callback(err);
+      });
+  };
+};
 
-function executeStatement() {
-  request = new Request(`select * from reports`, function(err, rowCount, i) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(rowCount + ' rows');
-    }
-  });
+let makeInsert = (tableName) => {
+  return makeQuery((input) => `BULK INSERT ${tableName} FROM '${dbOptions.path + tableName}.tbl' WITH  (FIELDTERMINATOR =' |' , ROWTERMINATOR =' |\n')`, input);
+};
 
-  request.on('row', function(columns) {
-    columns.forEach(function(column) {
-      console.log(column.value);
-    });
-  });
-
-  connection.execSql(request);
-}
+let getQuestions = makeQuery((input) => `SELECT * FROM questions LEFT OUTER JOIN answers ON answers.questions_id = questions.questionId WHERE questions.product_id = ${input}`, input, (result) => ({
+  answer: result.answer,
+  answerId: result.answerId,
+  asked_at: result.asked_at,
+  product_id: result.product_id,
+  question: result.question,
+  questionId: result.questionId,
+  questions_id: result.questions_id,
+  upvotes: result.upvotes,
+  user: result.user,
+  user_name: result.user_name
+}));
 
 module.exports = {
-  connection: connection
-};
+  sql: sql,
+  makeQuery: makeQuery,
+  insertProduct: makeInsert('Product'),
+  insertQuestion: makeInsert('Question'),
+  insertAnswer: makeInsert('Answer'),
+  insertVote: makeInsert('Vote'),
+  insertReport: makeInsert('Report'),
+  getQuestions: getQuestions
+}
