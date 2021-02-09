@@ -1,14 +1,10 @@
 const sql = require('mssql');
 const path = require('path');
-const dbOptions = {
-  path: path.join(__dirname, 'data/')
-};
+const dataPath = path.join(__dirname, 'data/');
 
 const config = {
   user: 'student',
   password: 'Qandapass1234',
-  // user: 'SA',
-  // password: 'Summersun_7',
   server: 'localhost',
   database: 'qanda',
   pool: {
@@ -25,15 +21,15 @@ sql.on('error', err => {
 })
 
 let makeQuery = (input, queryTemplate, pattern) => {
-  return (input, callback) => {
-    sql.connect(config)
+  return (callback) => {
+    return sql.connect(config)
       .then(pool => {
         return pool.request()
           .query(queryTemplate(input));
       })
       .then(result => {
         if (callback && pattern) {
-          callback(null, pattern(result));
+          callback(pattern(result));
         }
       })
       .catch(err => {
@@ -44,13 +40,13 @@ let makeQuery = (input, queryTemplate, pattern) => {
 
 let makeInsert = (tableName) => {
   return makeQuery(tableName, (input) => {
-    return `BULK INSERT qanda.${input} FROM '${dbOptions.path + input}.csv' WITH  (FORMAT = 'CSV', FIRSTROW=1, FIELDQUOTE = '\', FIELDTERMINATOR = ',', ROWTERMINATOR = '0x0a')`;
+    return `BULK INSERT qanda.${input} FROM '${dataPath + input}.csv' WITH  (FORMAT = 'CSV', FIRSTROW=2, FIELDQUOTE = '\', FIELDTERMINATOR = ',', ROWTERMINATOR = '0x0a')`;
   });
 };
 
 let testQuery = makeQuery(null, () => `INSERT qanda.reports (id, username, reported_at, answer_id) VALUES (1, 'john', '2015-12-24', 1)`);
 
-let getQuestions = makeQuery('questions', (input) => `SELECT * FROM questions LEFT OUTER JOIN answers ON answers.questions_id = questions.questionId WHERE questions.product_id = ${input}`, (result) => ({
+let getQuestions = makeQuery('questions', (input) => `SELECT * FROM qanda.questions LEFT OUTER JOIN answers ON answers.questions_id = questions.questionId WHERE questions.product_id = ${input}`, (result) => ({
   answer: result.answer,
   answerId: result.answerId,
   asked_at: result.asked_at,
@@ -63,13 +59,24 @@ let getQuestions = makeQuery('questions', (input) => `SELECT * FROM questions LE
   user_name: result.user_name
 }));
 
+/*
+insertProducts and the rest have the format:
+  insertProducts() => {
+    return {promise chain that performs bulk insert query on products.csv file in /data.
+  }
+
+getQuestions has the format:
+  getQuestions(callback) => {
+    return {object with data in the format specified by pattern (the last parameter of makeQuery)}
+  }
+*/
 module.exports = {
   sql: sql,
   makeQuery: makeQuery,
-  insertProduct: makeInsert('product'),
-  insertQuestion: makeInsert('question'),
-  insertAnswer: makeInsert('answer'),
-  insertVote: makeInsert('vote'),
-  insertReport: makeInsert('report'),
+  insertProducts: makeInsert('products'),
+  insertQuestions: makeInsert('questions'),
+  insertAnswers: makeInsert('answers'),
+  insertVotes: makeInsert('votes'),
+  insertReports: makeInsert('reports'),
   getQuestions: getQuestions
 }

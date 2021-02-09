@@ -2,9 +2,13 @@ const db = require('./database.js');
 const fs = require('fs');
 const faker = require('faker');
 const csv = require('./utils/csv-writer.js');
+const Promise = require('bluebird');
+const path = require('path');
 const {questionChance, answerChance, voteChance, reportChance, rInt, convertDate} = require('./utils/utils.js');
-const batchSize = 10000; //10,000 products, 0-70,000 questions, 0-280,000 answers/Votes/Reports
-const batchesTotal = 1000; //10,000,000 products
+const dataPath = path.join(__dirname, 'data/');
+
+const batchSize = 1000; //1,000 products, 0-7,000 questions, 0-28,000 answers/Votes/Reports
+const batchesTotal = 10000; //10,000,000 products
 
 
 //Track the current id in the database
@@ -49,7 +53,7 @@ let seedQuestions = (n, batches) => {
       userName: faker.internet.userName(),
       asked_at: convertDate(faker.date.past(5).toString()),
       question: (faker.random.words(rInt(8, 20)) + '?'),
-      product_id: product_id
+      product_id: productIdCount
     });
 
     //Add a random number of answers based on chance
@@ -65,7 +69,7 @@ let seedAnswers = (n, batches) => {
       userName: faker.internet.userName(),
       answered_at: convertDate(faker.date.past(1).toString()),
       answer: (faker.random.words(rInt(8, 18)) + '.'),
-      question_id: question_id
+      question_id: questionIdCount
     });
 
     //Add a random number of votes and reports
@@ -82,7 +86,7 @@ let seedVotes = (n, batches) => {
       userName: faker.internet.userName(),
       voted_at: convertDate(faker.date.past(1).toString()),
       helpful: faker.random.boolean(),
-      answer_id: answer_id
+      answer_id: answerIdCount
     });
   }
 };
@@ -94,52 +98,50 @@ let seedReports = (n, batches) => {
       id: reportIdCount,
       userName: faker.internet.userName(),
       reported_at: convertDate(faker.date.past(1).toString()),
-      answer_id: answer_id
+      answer_id: answerIdCount
     });
   }
 };
 
 //Promise loop that iterates batchesTotal number of times
-
+Promise.mapSeries(new Array(batchesTotal), (val, index) => {
+  //Log progress to console and start timer
+  console.log(`Batch ${index}/${batchesTotal}`)
   console.time("batch");
-  // //Create batchSize number of products and corresponding items.
-  // let records = seedProducts(batchSize);
 
-  // //Write batches to files in ./data.
-  // csv.productWriter.writeRecords(records.productBatch);
-  // csv.questionWriter.writeRecords(records.questionBatch);
-  // csv.answerWriter.writeRecords(records.answerBatch);
-  // csv.voteWriter.writeRecords(records.voteBatch);
-csv.reportWriter.writeRecords([records.reportBatch])
-  .catch( err => {
-    console.log('CSV-WRITER Err: ' + err);
-  })
-  .then(() => {
-    //Use db to BULK INSERT data files into database
-    console.log('File Write Success');
-    db.insertReport('reports', err => {
-      console.log('insertReport error: ' + err);
+  //Create batchSize number of products and corresponding items.
+  let records = seedProducts(batchSize);
+  console.log('Seed Object finished');
+
+  //Write batches to files in ./data.
+  return csv.writeAll(records)
+    .then(() => {
+      console.log('writeAll finished');
+      //Use db to BULK INSERT data files into database
+      db.insertProducts();
+      db.insertQuestions();
+      db.insertAnswers();
+      db.insertVotes();
+      db.insertReports();
+    })
+    .catch(err => {
+      console.log('db.insert error: ' + err);
+    })
+    .then(() => {
+      // Clean csv files
+      fs.writeFileSync('database/sqlcmd/data/products.csv','');
+      fs.writeFileSync('database/sqlcmd/data/questions.csv','');
+      fs.writeFileSync('database/sqlcmd/data/answers.csv','');
+      fs.writeFileSync('database/sqlcmd/data/votes.csv','');
+      fs.writeFileSync('database/sqlcmd/data/reports.csv','');
+    })
+    .then(() => {
+      //End timer
+      console.timeEnd("batch");
+    })
+    .catch( err => {
+      console.log('FS.WRITEFILE cleaning err: ' + err);
     });
-  })
-  .catch(err => {
-    console.log('Error catch after insertReport: ' + err);
-  })
-  .then(() => {
-    // Clean csv file
-    if (false) {
-      fs.writeFile('database/sqlcmd/data/reports.csv','', (err) => {
-        if (err) {
-          console.log('FS clean file error: ' + err);
-        } else{
-          console.log('The file has been saved!');
-        }
-      });
-    }
-  })
-  .then(() => {
-    console.timeEnd("batch");
-  })
-  .catch( err => {
-    console.log(err);
-  });
+});
+
 
