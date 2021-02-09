@@ -1,11 +1,14 @@
 const sql = require('mssql');
+const path = require('path');
 const dbOptions = {
-  path: './data/'
+  path: path.join(__dirname, 'data/')
 };
 
 const config = {
   user: 'student',
   password: 'Qandapass1234',
+  // user: 'SA',
+  // password: 'Summersun_7',
   server: 'localhost',
   database: 'qanda',
   pool: {
@@ -21,7 +24,7 @@ sql.on('error', err => {
   console.log(err);
 })
 
-let makeQuery = (queryTemplate, input, pattern) => {
+let makeQuery = (input, queryTemplate, pattern) => {
   return (input, callback) => {
     sql.connect(config)
       .then(pool => {
@@ -29,21 +32,25 @@ let makeQuery = (queryTemplate, input, pattern) => {
           .query(queryTemplate(input));
       })
       .then(result => {
-        if (pattern) {
+        if (callback && pattern) {
           callback(null, pattern(result));
         }
       })
       .catch(err => {
-        callback(err);
+          console.log(err);
       });
   };
 };
 
 let makeInsert = (tableName) => {
-  return makeQuery((input) => `BULK INSERT ${tableName} FROM '${dbOptions.path + tableName}.tbl' WITH  (FIELDTERMINATOR =' |' , ROWTERMINATOR =' |\n')`, input);
+  return makeQuery(tableName, (input) => {
+    return `BULK INSERT qanda.${input} FROM '${dbOptions.path + input}.csv' WITH  (FORMAT = 'CSV', FIRSTROW=1, FIELDQUOTE = '\', FIELDTERMINATOR = ',', ROWTERMINATOR = '0x0a')`;
+  });
 };
 
-let getQuestions = makeQuery((input) => `SELECT * FROM questions LEFT OUTER JOIN answers ON answers.questions_id = questions.questionId WHERE questions.product_id = ${input}`, input, (result) => ({
+let testQuery = makeQuery(null, () => `INSERT qanda.reports (id, username, reported_at, answer_id) VALUES (1, 'john', '2015-12-24', 1)`);
+
+let getQuestions = makeQuery('questions', (input) => `SELECT * FROM questions LEFT OUTER JOIN answers ON answers.questions_id = questions.questionId WHERE questions.product_id = ${input}`, (result) => ({
   answer: result.answer,
   answerId: result.answerId,
   asked_at: result.asked_at,
@@ -59,10 +66,10 @@ let getQuestions = makeQuery((input) => `SELECT * FROM questions LEFT OUTER JOIN
 module.exports = {
   sql: sql,
   makeQuery: makeQuery,
-  insertProduct: makeInsert('Product'),
-  insertQuestion: makeInsert('Question'),
-  insertAnswer: makeInsert('Answer'),
-  insertVote: makeInsert('Vote'),
-  insertReport: makeInsert('Report'),
+  insertProduct: makeInsert('product'),
+  insertQuestion: makeInsert('question'),
+  insertAnswer: makeInsert('answer'),
+  insertVote: makeInsert('vote'),
+  insertReport: makeInsert('report'),
   getQuestions: getQuestions
 }
