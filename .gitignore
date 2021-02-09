@@ -1,6 +1,9 @@
 ## MAC files ##
 .DS_Store
 
+## CSV Storage ##
+database/sqlcmd/data/
+
 ## NPM ##
 npm
 npm-debug.log
