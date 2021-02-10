@@ -15,14 +15,24 @@ const config = {
   stream: true
 };
 
+//Use a single connection pool
+const pool = new sql.ConnectionPool(config)
+const poolConnect = pool.connect()
+
 //Enables error handler on connections.
-sql.on('error', err => {
+pool.on('error', err => {
   console.log(err);
-})
+});
+
+let count = 0;
+pool.on('connect', () => {
+  console.log(count++);
+});
+
 
 let makeQuery = (input, queryTemplate, pattern) => {
   return (callback) => {
-    return sql.connect(config)
+    return poolConnect
       .then(pool => {
         return pool.request()
           .query(queryTemplate(input));
@@ -40,11 +50,9 @@ let makeQuery = (input, queryTemplate, pattern) => {
 
 let makeInsert = (tableName) => {
   return makeQuery(tableName, (input) => {
-    return `BULK INSERT qanda.${input} FROM '${dataPath + input}.csv' WITH  (FORMAT = 'CSV', FIRSTROW=2, FIELDQUOTE = '\', FIELDTERMINATOR = ',', ROWTERMINATOR = '0x0a')`;
+    return `BULK INSERT qanda.${input} FROM '${dataPath + input}.csv' WITH  (DATAFILETYPE = 'char', FIRSTROW=2, FIELDQUOTE = '"', FIELDTERMINATOR = '|', ROWTERMINATOR = '0x0A')`;
   });
 };
-
-let testQuery = makeQuery(null, () => `INSERT qanda.reports (id, username, reported_at, answer_id) VALUES (1, 'john', '2015-12-24', 1)`);
 
 let getQuestions = makeQuery('questions', (input) => `SELECT * FROM qanda.questions LEFT OUTER JOIN answers ON answers.questions_id = questions.questionId WHERE questions.product_id = ${input}`, (result) => ({
   answer: result.answer,
@@ -59,6 +67,9 @@ let getQuestions = makeQuery('questions', (input) => `SELECT * FROM qanda.questi
   user_name: result.user_name
 }));
 
+let closePool = () => {
+  pool.close();
+};
 /*
 insertProducts and the rest have the format:
   insertProducts() => {
@@ -78,5 +89,6 @@ module.exports = {
   insertAnswers: makeInsert('answers'),
   insertVotes: makeInsert('votes'),
   insertReports: makeInsert('reports'),
-  getQuestions: getQuestions
+  closePool: closePool,
+  getQuestions: getQuestions,
 }

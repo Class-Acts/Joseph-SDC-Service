@@ -12,3 +12,7 @@ BEGIN
 END
 
 exec sp_MSforeachtable 'DROP TABLE ?'
+GO
+
+DROP SCHEMA IF EXISTS qanda
+GO

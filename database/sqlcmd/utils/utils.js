@@ -10,7 +10,7 @@ let chance = (chances) => {
   };
 };
 
-let rInt = (min, max) => {
+let rInt = (min, max, precision) => {
   return Math.floor(Math.random() * (max + 1 - min) + min);
 };
 

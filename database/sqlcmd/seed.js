@@ -4,12 +4,22 @@ const faker = require('faker');
 const csv = require('./utils/csv-writer.js');
 const Promise = require('bluebird');
 const path = require('path');
+const LoremIpsum = require("lorem-ipsum").LoremIpsum;
 const {questionChance, answerChance, voteChance, reportChance, rInt, convertDate} = require('./utils/utils.js');
 const dataPath = path.join(__dirname, 'data/');
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 4,
+    min: 1
+  },
+  wordsPerSentence: {
+    max: 8,
+    min: 2
+  }
+});
 
 const batchSize = 1000; //1,000 products, 0-7,000 questions, 0-28,000 answers/Votes/Reports
 const batchesTotal = 10000; //10,000,000 products
-
 
 //Track the current id in the database
 let productIdCount = 0;
@@ -34,7 +44,7 @@ let seedProducts = function(n) {
       name: faker.commerce.productName(),
       seller: faker.company.companyName(),
       price: faker.commerce.price(.99,999.99,2),
-      rating: (rInt(1, 50) * .1),
+      rating: Number(rInt(0, 5) + '.' + rInt(0, 9)),
       product_code:  rInt(100000,999999)
     });
 
@@ -52,7 +62,7 @@ let seedQuestions = (n, batches) => {
       id: questionIdCount,
       userName: faker.internet.userName(),
       asked_at: convertDate(faker.date.past(5).toString()),
-      question: (faker.random.words(rInt(8, 20)) + '?'),
+      question: lorem.generateParagraphs(1).slice(0, -1) + '?',
       product_id: productIdCount
     });
 
@@ -68,7 +78,7 @@ let seedAnswers = (n, batches) => {
       id: answerIdCount,
       userName: faker.internet.userName(),
       answered_at: convertDate(faker.date.past(1).toString()),
-      answer: (faker.random.words(rInt(8, 18)) + '.'),
+      answer: lorem.generateParagraphs(1),
       question_id: questionIdCount
     });
 
@@ -85,7 +95,7 @@ let seedVotes = (n, batches) => {
       id: voteIdCount,
       userName: faker.internet.userName(),
       voted_at: convertDate(faker.date.past(1).toString()),
-      helpful: faker.random.boolean(),
+      helpful: rInt(0, 1),
       answer_id: answerIdCount
     });
   }
@@ -103,26 +113,36 @@ let seedReports = (n, batches) => {
   }
 };
 
+console.log(`Seeding ${batchesTotal} batches`)
+console.time("total");
+
 //Promise loop that iterates batchesTotal number of times
-Promise.mapSeries(new Array(batchesTotal), (val, index) => {
+Promise.each(new Array(batchesTotal), (val, index) => {
   //Log progress to console and start timer
-  console.log(`Batch ${index}/${batchesTotal}`)
-  console.time("batch");
+  console.log(`Saving ${index}/${batchesTotal}`)
+  console.time("time");
 
   //Create batchSize number of products and corresponding items.
   let records = seedProducts(batchSize);
-  console.log('Seed Object finished');
-
-  //Write batches to files in ./data.
+  // return Promise.resolve('Start')
   return csv.writeAll(records)
+    .catch(err => {
+      console.log('CSV save error: ' + err);
+    })
     .then(() => {
-      console.log('writeAll finished');
-      //Use db to BULK INSERT data files into database
-      db.insertProducts();
-      db.insertQuestions();
-      db.insertAnswers();
-      db.insertVotes();
-      db.insertReports();
+      return db.insertProducts();
+    })
+    .then(() => {
+      return db.insertQuestions();
+    })
+    .then(() => {
+      return db.insertAnswers();
+    })
+    .then(() => {
+      return db.insertVotes();
+    })
+    .then(() => {
+      return db.insertReports();
     })
     .catch(err => {
       console.log('db.insert error: ' + err);
@@ -137,11 +157,17 @@ Promise.mapSeries(new Array(batchesTotal), (val, index) => {
     })
     .then(() => {
       //End timer
-      console.timeEnd("batch");
+      console.timeEnd("time");
     })
     .catch( err => {
       console.log('FS.WRITEFILE cleaning err: ' + err);
     });
+
+})
+.catch( err => {
+  console.log(err);
+})
+.then(() => {
+  console.timeEnd("total");
+  db.closePool();
 });
-
-

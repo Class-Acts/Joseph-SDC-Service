@@ -2,6 +2,7 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const productWriter = createCsvWriter({
   path: 'database/sqlcmd/data/products.csv',
+  fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
     {id: 'name', title: 'name'},
@@ -14,6 +15,7 @@ const productWriter = createCsvWriter({
 
 const questionWriter = createCsvWriter({
   path: 'database/sqlcmd/data/questions.csv',
+  fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},
@@ -25,6 +27,7 @@ const questionWriter = createCsvWriter({
 
 const answerWriter = createCsvWriter({
   path: 'database/sqlcmd/data/answers.csv',
+  fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},
@@ -36,6 +39,7 @@ const answerWriter = createCsvWriter({
 
 const voteWriter = createCsvWriter({
   path: 'database/sqlcmd/data/votes.csv',
+  fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},
@@ -47,6 +51,7 @@ const voteWriter = createCsvWriter({
 
 const reportWriter = createCsvWriter({
   path: 'database/sqlcmd/data/reports.csv',
+  fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},

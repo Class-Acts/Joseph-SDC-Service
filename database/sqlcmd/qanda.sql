@@ -1,4 +1,4 @@
-CREATE SCHEMA qanda;
+CREATE SCHEMA qanda
 GO
 
 CREATE TABLE qanda.products (
@@ -7,7 +7,7 @@ CREATE TABLE qanda.products (
   seller VARCHAR(50),
   price DECIMAL(18,2),
   rating DECIMAL(5,1),
-  product_code NUMERIC(18,5),
+  product_code NUMERIC(18,0),
   CONSTRAINT PK_products_productID PRIMARY KEY CLUSTERED (id),
 )
 GO
@@ -36,9 +36,9 @@ GO
 
 CREATE TABLE qanda.votes (
   id INT NOT NULL,
-  helpful INT,
-  voted_at DATETIME,
   username VARCHAR(40),
+  voted_at DATETIME,
+  helpful INT,
   answer_id INT,
   CONSTRAINT PK_votes_voteID PRIMARY KEY CLUSTERED (id),
   CONSTRAINT PK_votes_answerID FOREIGN KEY (answer_id) REFERENCES qanda.answers (id)
