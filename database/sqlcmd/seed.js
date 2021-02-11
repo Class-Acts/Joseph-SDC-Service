@@ -18,8 +18,8 @@ const lorem = new LoremIpsum({
   }
 });
 
-const batchSize = 1000; //1,000 products, 0-7,000 questions, 0-28,000 answers/Votes/Reports
-const batchesTotal = 10000; //10,000,000 products
+const batchSize = 10000; //10,000 products, 0-70,000 questions, 0-280,000 answers/Votes/Reports
+const batchesTotal = 1000; //10,000,000 products
 
 //Track the current id in the database
 let productIdCount = 0;
@@ -117,52 +117,62 @@ console.log(`Seeding ${batchesTotal} batches`)
 console.time("total");
 
 //Promise loop that iterates batchesTotal number of times
-Promise.each(new Array(batchesTotal), (val, index) => {
+Promise.each(new Array(10), (val, index) => {
   //Log progress to console and start timer
-  console.log(`Saving ${index}/${batchesTotal}`)
-  console.time("time");
+  // console.log(`Saving ${index}/${batchesTotal}`)
+  // console.time("time");
 
-  //Create batchSize number of products and corresponding items.
-  let records = seedProducts(batchSize);
-  // return Promise.resolve('Start')
-  return csv.writeAll(records)
-    .catch(err => {
-      console.log('CSV save error: ' + err);
-    })
-    .then(() => {
-      return db.insertProducts();
-    })
-    .then(() => {
-      return db.insertQuestions();
-    })
-    .then(() => {
-      return db.insertAnswers();
-    })
-    .then(() => {
-      return db.insertVotes();
-    })
-    .then(() => {
-      return db.insertReports();
-    })
-    .catch(err => {
-      console.log('db.insert error: ' + err);
-    })
-    .then(() => {
-      // Clean csv files
-      fs.writeFileSync('database/sqlcmd/data/products.csv','');
-      fs.writeFileSync('database/sqlcmd/data/questions.csv','');
-      fs.writeFileSync('database/sqlcmd/data/answers.csv','');
-      fs.writeFileSync('database/sqlcmd/data/votes.csv','');
-      fs.writeFileSync('database/sqlcmd/data/reports.csv','');
-    })
-    .then(() => {
-      //End timer
-      console.timeEnd("time");
-    })
-    .catch( err => {
-      console.log('FS.WRITEFILE cleaning err: ' + err);
-    });
+  // //Create batchSize number of products and corresponding items.
+  // let records = seedProducts(batchSize);
+  // // return Promise.resolve('Start')
+  // return csv.writeAll(records)
+  //   .catch(err => {
+  //     console.log('CSV save error: ' + err);
+  //   })
+  //   .then(() => {
+  //     return db.insertProducts();
+  //   })
+  //   .then(() => {
+  //     return db.insertQuestions();
+  //   })
+  //   .then(() => {
+  //     return db.insertAnswers();
+  //   })
+  //   .then(() => {
+  //     return db.insertVotes();
+  //   })
+  //   .then(() => {
+  //     return db.insertReports();
+  //   })
+  //   .catch(err => {
+  //     console.log('db.insert error: ' + err);
+  //   })
+  //   .then(() => {
+  //     // Clean csv files
+  //     fs.writeFileSync('database/sqlcmd/data/products.csv','');
+  //     fs.writeFileSync('database/sqlcmd/data/questions.csv','');
+  //     fs.writeFileSync('database/sqlcmd/data/answers.csv','');
+  //     fs.writeFileSync('database/sqlcmd/data/votes.csv','');
+  //     fs.writeFileSync('database/sqlcmd/data/reports.csv','');
+  //   })
+  //   .then(() => {
+  //     //End timer
+  //     console.timeEnd("time");
+  //   })
+  //   .catch( err => {
+  //     console.log('FS.WRITEFILE cleaning err: ' + err);
+  //   });
 
+})
+.catch( err => {
+  console.log(err);
+})
+.then(() => {
+  //Index all foreign keys
+  db.addIndexes('questions','product');
+  db.addIndexes('answers','question');
+  db.addIndexes('votes','answer');
+  db.addIndexes('reports','answer');
 })
 .catch( err => {
   console.log(err);

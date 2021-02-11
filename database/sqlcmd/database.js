@@ -10,7 +10,7 @@ const config = {
   pool: {
     max: 10,
     min: 0,
-    idleTimeoutMillis: 30000
+    idleTimeoutMillis: 1800000
   },
   stream: true
 };
@@ -30,21 +30,21 @@ pool.on('connect', () => {
 });
 
 
-let makeQuery = (input, queryTemplate, pattern) => {
-  return (callback) => {
+let makeQuery = (tableName, queryTemplate, pattern) => {
+  return (input, callback) => {
     return poolConnect
       .then(pool => {
         return pool.request()
-          .query(queryTemplate(input));
+          .query(queryTemplate(tableName, input));
       })
       .then(result => {
         if (callback && pattern) {
-          callback(pattern(result));
+          callback(null, pattern(result));
         }
       })
       .catch(err => {
-          console.log(err);
-      });
+          callback(err);
+        });
   };
 };
 
@@ -54,18 +54,26 @@ let makeInsert = (tableName) => {
   });
 };
 
-let getQuestions = makeQuery('questions', (input) => `SELECT * FROM qanda.questions LEFT OUTER JOIN answers ON answers.questions_id = questions.questionId WHERE questions.product_id = ${input}`, (result) => ({
-  answer: result.answer,
-  answerId: result.answerId,
-  asked_at: result.asked_at,
-  product_id: result.product_id,
-  question: result.question,
-  questionId: result.questionId,
-  questions_id: result.questions_id,
-  upvotes: result.upvotes,
-  user: result.user,
-  user_name: result.user_name
-}));
+let addIndexes = (tableName, input) => {
+  let indexer = makeQuery('', () => {
+    let indexQuery = `CREATE INDEX ${input}_id_index ON qanda.${tableName} (${input}_id)`;
+    return indexQuery;
+  });
+  return indexer();
+};
+
+let getQuestions = makeQuery('questions', (tableName, input) => {
+  let query = `SELECT * FROM qanda.questions AS qs LEFT OUTER JOIN qanda.answers AS an ON qs.id = an.question_id WHERE qs.product_id = ${input}`;
+  return query;
+}, result => result);
+
+let insertQuestion = (newQuestion, cb) => {
+  let values = `"${newQuestion[0]}", "${newQuestion[1]}", "${newQuestion[2]}", ${newQuestion[3]}`;
+  return makeQuery('', () => (`INSERT INTO qanda.questions (username, asked_at, question, product_id) VALUES (${input})`),
+  (result) => {
+    return {insertId: result} //Find what result is and extract the question_id
+  });
+};
 
 let closePool = () => {
   pool.close();
@@ -89,6 +97,8 @@ module.exports = {
   insertAnswers: makeInsert('answers'),
   insertVotes: makeInsert('votes'),
   insertReports: makeInsert('reports'),
+  addIndexes: addIndexes,
   closePool: closePool,
   getQuestions: getQuestions,
+  insertQuestion, insertQuestion
 }

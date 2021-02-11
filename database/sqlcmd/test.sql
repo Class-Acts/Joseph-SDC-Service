@@ -1,11 +1,12 @@
-INSERT INTO qanda.products (id, name, seller, price, rating, product_code) VALUES (1, 'shoes', 'vans', 33.55, 4.9, 123456789)
-INSERT INTO qanda.products (id, name, seller, price, rating, product_code) VALUES (2, 'shoes', 'vans', 33.55, 4.9, 123456789)
-GO
+DECLARE @TableName sysname
+SET @TableName = 'qanda.products'
 
-INSERT INTO qanda.questions (id, username, asked_at, question, product_id) VALUES (1, 'aikie', '2011-10-11', 'Why is moon round?', 1)
-INSERT INTO qanda.questions (id, username, asked_at, question, product_id) VALUES (2, 'aikie', '2011-10-11', 'Why is moon round?', 2)
-GO
-
-INSERT INTO qanda.answers (id, username, answered_at, answer, question_id) VALUES (1, 'wumby', '2011-10-12', 'Because the moon is a plate', 1)
-INSERT INTO qanda.answers (id, username, answered_at, answer, question_id) VALUES (2, 'wumby', '2011-10-12', 'Because the moon is a plate', 2)
+SELECT TBL.object_id, TBL.name, SUM(PART.rows) AS rows
+FROM sys.tables TBL
+INNER JOIN sys.partitions PART ON TBL.object_id = PART.object_id
+INNER JOIN sys.indexes IDX ON PART.object_id = IDX.object_id
+AND PART.index_id = IDX.index_id
+WHERE TBL.name = @TableName
+AND IDX.index_id < 2
+GROUP BY TBL.object_id, TBL.name;
 GO

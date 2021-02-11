@@ -27,36 +27,40 @@ app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 
 app.get('/:id', (req, res) => {
+  //Start Timer (query start)
+  console.time('getQuestions');
   let product = req.params.id;
-  debugger;
   if (product !== 'favicon.ico') {
-    db.getQuestions(product, (err, data) => {
+    db.getQuestions(product, (err, output) => {
+      //End timer (query finished).
+      console.timeEnd('getQuestions');
+      let data = output.recordset;
       if (err) {
         console.log('error getting questions from db: ' + err);
       } else {
         let questionData = data.reduce((accumulator, currVal) => {
-          if (!accumulator[currVal.questions_id]) {
-            let temp = currVal.questions_id;
-            accumulator[currVal.questions_id] = {
-              questionId: temp,
+          let idKey = currVal.id[0];
+          if (!accumulator[idKey]) {
+            accumulator[idKey] = {
+              questionId: idKey,
               question: currVal.question,
               asked_at: currVal.asked_at,
-              user: currVal.user,
-              answers: [{
-                id: currVal.answerId,
+              user: currVal.username[0],
+              answers: (currVal.answer !== null) ? [{
+                id: currVal.id[1],
                 answer: currVal.answer,
                 answered_at: currVal.answered_at,
-                upvotes: currVal.upvotes,
-                user_name: currVal.user_name
-              }]
-            }
+                upvotes: 42, // Needs to be changed to correctly reflect upvotes.
+                user_name: currVal.username[1]
+              }] : []
+            };
           } else {
-            accumulator[currVal.questions_id].answers.push({
-              id: currVal.answerId,
+            accumulator[idKey].answers.push({
+              id: currVal.id[1],
               answer: currVal.answer,
               answered_at: currVal.answered_at,
-              upvotes: currVal.upvotes,
-              user_name: currVal.user_name
+              upvotes: 43,
+              user_name: currVal.username[1]
             })
           }
           return accumulator;
