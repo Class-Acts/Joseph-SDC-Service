@@ -1,32 +1,56 @@
 CREATE SCHEMA qanda;
 GO
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Products' and xtype='U')
-    create table Products (
-        Name varchar(64) not null
-
-    )
+CREATE TABLE qanda.products (
+  id INT NOT NULL,
+  name VARCHAR(50),
+  seller VARCHAR(50),
+  price DECIMAL(18,2),
+  rating DECIMAL(5,1),
+  product_code NUMERIC(18,5),
+  CONSTRAINT PK_products_productID PRIMARY KEY CLUSTERED (id),
+)
 GO
 
-CREATE TABLE customer_services.jobs(
-    job_id INT PRIMARY KEY IDENTITY,
-    customer_id INT NOT NULL,
-    description VARCHAR(200),
-    created_at DATETIME2 NOT NULL
-);
-
-CREATE TABLE qanda.Products (
-  Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-  Name NVARCHAR(50),
-  Seller NVARCHAR(50)
-);
+CREATE TABLE qanda.questions (
+  id INT NOT NULL,
+  username VARCHAR(40),
+  asked_at DATETIME,
+  question NVARCHAR(300),
+  product_id INT,
+  CONSTRAINT PK_questions_questionID PRIMARY KEY CLUSTERED (id),
+  CONSTRAINT FK_questions_productID FOREIGN KEY (product_id) REFERENCES qanda.products (id)
+)
 GO
 
-INSERT INTO qanda.Products (Name, Seller) VALUES
-(N'Shoe', N'Nike'),
-(N'Coat', N'Northface'),
-(N'Hat', N'Cubs');
+CREATE TABLE qanda.answers (
+  id INT NOT NULL,
+  username VARCHAR(40),
+  answered_at DATETIME,
+  answer NVARCHAR(300),
+  question_id INT,
+  CONSTRAINT PK_answers_answerID PRIMARY KEY CLUSTERED (id),
+  CONSTRAINT FK_answers_questionID FOREIGN KEY(question_id) REFERENCES qanda.questions (id)
+)
 GO
 
-SELECT * FROM qanda.Products;
+CREATE TABLE qanda.votes (
+  id INT NOT NULL,
+  helpful INT,
+  voted_at DATETIME,
+  username VARCHAR(40),
+  answer_id INT,
+  CONSTRAINT PK_votes_voteID PRIMARY KEY CLUSTERED (id),
+  CONSTRAINT PK_votes_answerID FOREIGN KEY (answer_id) REFERENCES qanda.answers (id)
+)
+GO
+
+CREATE TABLE qanda.reports (
+  id INT NOT NULL,
+  username VARCHAR(40),
+  reported_at DATETIME,
+  answer_id INT,
+  CONSTRAINT PK_reports_reportID PRIMARY KEY CLUSTERED (id),
+  CONSTRAINT PK_reports_answerID FOREIGN KEY (answer_id) REFERENCES qanda.answers (id)
+)
 GO
