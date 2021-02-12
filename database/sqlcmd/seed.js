@@ -116,7 +116,6 @@ Promise.mapSeries(new Array(batchesTotal), (val, index) => {
   //Write batches to files in ./data.
   return csv.writeAll(records)
     .then(() => {
-      console.log('writeAll finished');
       //Use db to BULK INSERT data files into database
       db.insertProducts();
       db.insertQuestions();
@@ -129,11 +128,11 @@ Promise.mapSeries(new Array(batchesTotal), (val, index) => {
     })
     .then(() => {
       // Clean csv files
-      fs.writeFileSync('database/sqlcmd/data/products.csv','');
-      fs.writeFileSync('database/sqlcmd/data/questions.csv','');
-      fs.writeFileSync('database/sqlcmd/data/answers.csv','');
-      fs.writeFileSync('database/sqlcmd/data/votes.csv','');
-      fs.writeFileSync('database/sqlcmd/data/reports.csv','');
+      fs.writeFileSync(path.join(__dirname, 'data', 'products.csv'),'');
+      fs.writeFileSync(path.join(__dirname, 'data', 'questions.csv'),'');
+      fs.writeFileSync(path.join(__dirname, 'data', 'answers.csv'),'');
+      fs.writeFileSync(path.join(__dirname, 'data', 'votes.csv'),'');
+      fs.writeFileSync(path.join(__dirname, 'data', 'reports.csv'),'');
     })
     .then(() => {
       //End timer

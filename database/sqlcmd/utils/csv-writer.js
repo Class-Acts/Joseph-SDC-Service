@@ -1,7 +1,8 @@
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const path = require('path');
 
 const productWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/products.csv',
+  path: path.join(__dirname, '..', 'data', 'products.csv'),
   header: [
     {id: 'id', title: 'id'},
     {id: 'name', title: 'name'},
@@ -13,7 +14,7 @@ const productWriter = createCsvWriter({
 });
 
 const questionWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/questions.csv',
+  path: path.join(__dirname, '..', 'data', 'questions.csv'),
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},
@@ -24,7 +25,7 @@ const questionWriter = createCsvWriter({
 });
 
 const answerWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/answers.csv',
+  path: path.join(__dirname, '..', 'data', 'answers.csv'),
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},
@@ -35,7 +36,7 @@ const answerWriter = createCsvWriter({
 });
 
 const voteWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/votes.csv',
+  path: path.join(__dirname, '..', 'data', 'votes.csv'),
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},
@@ -46,7 +47,7 @@ const voteWriter = createCsvWriter({
 });
 
 const reportWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/reports.csv',
+  path: path.join(__dirname, '..', 'data', 'reports.csv'),
   header: [
     {id: 'id', title: 'id'},
     {id: 'userName', title: 'userName'},
