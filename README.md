@@ -31,8 +31,12 @@ USE qanda
 CREATE USER student
 GO
 ```
-
-> Note that this project uses the npm package tedious to interact with the sqlcmd database instance. It also uses ms-sqlcmd to simplify use of the tedious package.
+7. Grant user 'student' bulk and administrator priveleges
+```
+USE MASTER
+ALTER SERVER ROLE [sysadmin] ADD MEMBER student
+GO
+```
 
 ## Project Installation
 From within the root directory:
