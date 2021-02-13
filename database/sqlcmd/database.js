@@ -1,7 +1,7 @@
 const sql = require('mssql');
 const path = require('path');
-// const dataPath = path.join(__dirname, 'data');
-const dataPath = '/csvs';
+const dataPath = path.join(__dirname, 'data');
+// const dataPath = '/csvs';
 
 const config = {
   user: 'student',
@@ -44,8 +44,10 @@ let makeQuery = (tableName, queryTemplate, pattern) => {
         }
       })
       .catch(err => {
+        if (callback) {
           callback(err);
-        });
+        }
+      });
   };
 };
 

@@ -2,6 +2,7 @@ const db = require('./database.js');
 const fs = require('fs');
 const faker = require('faker');
 const csv = require('./utils/csv-writer.js');
+const path = require('path');
 const Promise = require('bluebird');
 const LoremIpsum = require("lorem-ipsum").LoremIpsum;
 const {questionChance, answerChance, voteChance, reportChance, rInt, convertDate} = require('./utils/utils.js');
@@ -21,7 +22,7 @@ var dataPath;
 if (process.argv[2] === '-aws') {
   dataPath = '/csvs';
 } else {
-  dataPath = path.join(__dirname, 'database', 'sqlcmd', 'data');
+  dataPath = path.join(__dirname, 'data');
 }
 
 const batchSize = 10000; //10,000 products, 0-70,000 questions, 0-280,000 answers/Votes/Reports
@@ -125,7 +126,7 @@ console.time("total");
 //Promise loop that iterates batchesTotal number of times
 Promise.each(new Array(batchSize), (val, index) => {
   // Log progress to console and start timer
-  console.log(`Saving ${index}/${batchesTotal}`)
+  console.log(`Saving ${index + 1}/${batchesTotal}`)
   console.time("time");
 
   //Create batchSize number of products and corresponding items.
