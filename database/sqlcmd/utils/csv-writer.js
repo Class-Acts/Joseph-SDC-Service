@@ -1,7 +1,10 @@
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
+// var dataPath = path.join(__dirname, 'database', 'sqlcmd', 'data');
+var dataPath = '/csvs';
+
 const productWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/products.csv',
+  path: `${dataPath}/products.csv`,
   fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
@@ -14,7 +17,7 @@ const productWriter = createCsvWriter({
 });
 
 const questionWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/questions.csv',
+  path: `${dataPath}/questions.csv`,
   fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
@@ -26,7 +29,7 @@ const questionWriter = createCsvWriter({
 });
 
 const answerWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/answers.csv',
+  path: `${dataPath}/answers.csv`,
   fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
@@ -38,7 +41,7 @@ const answerWriter = createCsvWriter({
 });
 
 const voteWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/votes.csv',
+  path: `${dataPath}/votes.csv`,
   fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
@@ -50,7 +53,7 @@ const voteWriter = createCsvWriter({
 });
 
 const reportWriter = createCsvWriter({
-  path: 'database/sqlcmd/data/reports.csv',
+  path: `${dataPath}/reports.csv`,
   fieldDelimiter: '|',
   header: [
     {id: 'id', title: 'id'},
@@ -80,5 +83,5 @@ let writeAll = (records) => {
 };
 
 module.exports = {
-  writeAll: writeAll
-}
+  writeAll: writeAll,
+};

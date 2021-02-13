@@ -3,10 +3,8 @@ const fs = require('fs');
 const faker = require('faker');
 const csv = require('./utils/csv-writer.js');
 const Promise = require('bluebird');
-const path = require('path');
 const LoremIpsum = require("lorem-ipsum").LoremIpsum;
 const {questionChance, answerChance, voteChance, reportChance, rInt, convertDate} = require('./utils/utils.js');
-const dataPath = path.join(__dirname, 'data/');
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
     max: 4,
@@ -17,6 +15,14 @@ const lorem = new LoremIpsum({
     min: 2
   }
 });
+var dataPath;
+//AWS path will only work with a custom folder owned by a group with correct read/write priveleges.
+//https://stackoverflow.com/questions/65794853/sql-server-bulk-insert-linux-rhel-error
+if (process.argv[2] === '-aws') {
+  dataPath = '/csvs';
+} else {
+  dataPath = path.join(__dirname, 'database', 'sqlcmd', 'data');
+}
 
 const batchSize = 10000; //10,000 products, 0-70,000 questions, 0-280,000 answers/Votes/Reports
 const batchesTotal = 1000; //10,000,000 products
@@ -41,11 +47,11 @@ let seedProducts = function(n) {
     //Create a single product and add it to the product batch to add to csv in preparation for bulk insert.
     batches.productBatch.push({
       id: productIdCount,
-      name: faker.commerce.productName(),
-      seller: faker.company.companyName(),
-      price: faker.commerce.price(.99,999.99,2),
-      rating: Number(rInt(0, 5) + '.' + rInt(0, 9)),
-      product_code:  rInt(100000,999999)
+      name: faker.commerce.productName()
+      // seller: faker.company.companyName(),
+      // price: faker.commerce.price(.99,999.99,2),
+      // rating: Number(rInt(0, 5) + '.' + rInt(0, 9)),
+      // product_code:  rInt(100000,999999)
     });
 
     //Add a random number of questions based on chance (defined in utils)
@@ -117,57 +123,58 @@ console.log(`Seeding ${batchesTotal} batches`)
 console.time("total");
 
 //Promise loop that iterates batchesTotal number of times
-Promise.each(new Array(10), (val, index) => {
-  //Log progress to console and start timer
-  // console.log(`Saving ${index}/${batchesTotal}`)
-  // console.time("time");
+Promise.each(new Array(batchSize), (val, index) => {
+  // Log progress to console and start timer
+  console.log(`Saving ${index}/${batchesTotal}`)
+  console.time("time");
 
-  // //Create batchSize number of products and corresponding items.
-  // let records = seedProducts(batchSize);
-  // // return Promise.resolve('Start')
-  // return csv.writeAll(records)
-  //   .catch(err => {
-  //     console.log('CSV save error: ' + err);
-  //   })
-  //   .then(() => {
-  //     return db.insertProducts();
-  //   })
-  //   .then(() => {
-  //     return db.insertQuestions();
-  //   })
-  //   .then(() => {
-  //     return db.insertAnswers();
-  //   })
-  //   .then(() => {
-  //     return db.insertVotes();
-  //   })
-  //   .then(() => {
-  //     return db.insertReports();
-  //   })
-  //   .catch(err => {
-  //     console.log('db.insert error: ' + err);
-  //   })
-  //   .then(() => {
-  //     // Clean csv files
-  //     fs.writeFileSync('database/sqlcmd/data/products.csv','');
-  //     fs.writeFileSync('database/sqlcmd/data/questions.csv','');
-  //     fs.writeFileSync('database/sqlcmd/data/answers.csv','');
-  //     fs.writeFileSync('database/sqlcmd/data/votes.csv','');
-  //     fs.writeFileSync('database/sqlcmd/data/reports.csv','');
-  //   })
-  //   .then(() => {
-  //     //End timer
-  //     console.timeEnd("time");
-  //   })
-  //   .catch( err => {
-  //     console.log('FS.WRITEFILE cleaning err: ' + err);
-  //   });
+  //Create batchSize number of products and corresponding items.
+  let records = seedProducts(batchSize);
+  // return Promise.resolve('Start')
+  return csv.writeAll(records)
+    .catch(err => {
+      console.log('CSV save error: ' + err);
+    })
+    .then(() => {
+      return db.insertProducts();
+    })
+    .then(() => {
+      return db.insertQuestions();
+    })
+    .then(() => {
+      return db.insertAnswers();
+    })
+    .then(() => {
+      return db.insertVotes();
+    })
+    .then(() => {
+      return db.insertReports();
+    })
+    .catch(err => {
+      console.log('db.insert error: ' + err);
+    })
+    .then(() => {
+      // Clean csv files
+      fs.writeFileSync(`${dataPath}/products.csv`,'');
+      fs.writeFileSync(`${dataPath}/questions.csv`,'');
+      fs.writeFileSync(`${dataPath}/answers.csv`,'');
+      fs.writeFileSync(`${dataPath}/votes.csv`,'');
+      fs.writeFileSync(`${dataPath}/reports.csv`,'');
+    })
+    .then(() => {
+      //End timer
+      console.timeEnd("time");
+    })
+    .catch( err => {
+      console.log('FS.WRITEFILE cleaning err: ' + err);
+    });
 
 })
 .catch( err => {
   console.log(err);
 })
 .then(() => {
+  console.log('Indexing all foreign keys');
   //Index all foreign keys
   db.addIndexes('questions','product');
   db.addIndexes('answers','question');

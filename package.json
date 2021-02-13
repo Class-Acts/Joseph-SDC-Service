@@ -15,7 +15,8 @@
     "clean": "./tsqlsetup.sh",
     "mysql": "nodemon server -mysql",
     "mysql:setup": "node database/mysql/seed.js",
-    "seed": "node database/sqlcmd/seed.js"
+    "seed:local": "node database/sqlcmd/seed.js -local",
+    "seed:aws": "node database/sqlcmd/seed.js -aws"
   },
   "dependencies": {
     "axios": "^0.21.1",

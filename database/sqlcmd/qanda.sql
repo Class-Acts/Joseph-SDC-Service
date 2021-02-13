@@ -4,10 +4,10 @@ GO
 CREATE TABLE qanda.products (
   id INT NOT NULL,
   name VARCHAR(50),
-  seller VARCHAR(50),
-  price DECIMAL(18,2),
-  rating DECIMAL(5,1),
-  product_code NUMERIC(18,0),
+  -- seller VARCHAR(50),
+  -- price DECIMAL(18,2),
+  -- rating DECIMAL(5,1),
+  -- product_code NUMERIC(18,0),
   CONSTRAINT PK_products_productID PRIMARY KEY CLUSTERED (id),
 )
 GO

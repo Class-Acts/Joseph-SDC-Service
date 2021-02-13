@@ -1,6 +1,7 @@
 const sql = require('mssql');
 const path = require('path');
-const dataPath = path.join(__dirname, 'data/');
+// const dataPath = path.join(__dirname, 'data');
+const dataPath = '/csvs';
 
 const config = {
   user: 'student',
@@ -50,7 +51,7 @@ let makeQuery = (tableName, queryTemplate, pattern) => {
 
 let makeInsert = (tableName) => {
   return makeQuery(tableName, (input) => {
-    return `BULK INSERT qanda.${input} FROM '${dataPath + input}.csv' WITH  (DATAFILETYPE = 'char', FIRSTROW=2, FIELDQUOTE = '"', FIELDTERMINATOR = '|', ROWTERMINATOR = '0x0A')`;
+    return `BULK INSERT qanda.${input} FROM '${dataPath + '/' + input}.csv' WITH  (DATAFILETYPE = 'char', FIRSTROW=2, FIELDQUOTE = '"', FIELDTERMINATOR = '|', ROWTERMINATOR = '0x0A')`;
   });
 };
 
