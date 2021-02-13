@@ -24,7 +24,10 @@ app.use(jsonParser);
 app.use(urlencodedParser);
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
-
+app.use( (req, res, next) => {
+  console.log(`Serving ${req.method} at ${req.url}`);
+  next();
+});
 
 app.get('/:id', (req, res) => {
   //Start Timer (query start)
@@ -64,8 +67,7 @@ app.get('/:id', (req, res) => {
             })
           }
           return accumulator;
-        }, {})
-        console.log(questionData);
+        }, {});
         res.send(Object.values(questionData));
       }
     })

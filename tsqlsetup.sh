@@ -8,3 +8,5 @@ sqlcmd -S localhost -U student -P Qandapass1234 -d qanda -i ./database/sqlcmd/cl
 
 #Log in to sqlcmd as student
 sqlcmd -S localhost -U student -P Qandapass1234
+
+3.19.92.164

@@ -124,7 +124,7 @@ console.log(`Seeding ${batchesTotal} batches`)
 console.time("total");
 
 //Promise loop that iterates batchesTotal number of times
-Promise.each(new Array(batchSize), (val, index) => {
+Promise.each(new Array(batchesTotal), (val, index) => {
   // Log progress to console and start timer
   console.log(`Saving ${index + 1}/${batchesTotal}`)
   console.time("time");
