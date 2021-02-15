@@ -1,8 +1,8 @@
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const path = require('path');
 
-var dataPath = path.join(__dirname, '..', 'data');
-// var dataPath = '/csvs';
+// var dataPath = path.join(__dirname, '..', 'data');
+var dataPath = '/csvs';
 
 const productWriter = createCsvWriter({
   path: `${dataPath}/products.csv`,

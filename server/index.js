@@ -24,7 +24,7 @@ app.use(jsonParser);
 app.use(urlencodedParser);
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
-app.use( (req, res, next) => {
+app.use((req, res, next) => {
   console.log(`Serving ${req.method} at ${req.url}`);
   next();
 });
