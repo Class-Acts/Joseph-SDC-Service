@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import './styles/Ask.css';
+import {host} from './config.js';
 
 class Ask extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class Ask extends React.Component {
   }
 
   handleClick() {
-    axios.post('http://localhost:4000/questions/' + this.state.product_id, this.state)
+    axios.post(`http://${host}:4000/questions/` + this.state.product_id, this.state)
       .then((data) => {
         this.props.asked();
       })

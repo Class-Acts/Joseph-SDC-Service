@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import axios from 'axios';
 import './styles/Answer.css';
+import {host} from './config.js';
 
 class Answer extends React.Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class Answer extends React.Component {
   }
 
   handleClick() {
-   axios.post('http://localhost:4000/answers/' + this.props.questionId, this.state)
+   axios.post(`http://${host}:4000/answers/` + this.props.questionId, this.state)
      .then((data) => {
        this.props.wasAnswered();
        this.props.popQuestion();

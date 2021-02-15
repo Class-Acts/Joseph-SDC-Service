@@ -5,6 +5,7 @@ import Body from './Body.jsx';
 import Ask from './Ask.jsx';
 import './styles/App.css';
 import ReactModal from 'react-modal';
+import {host} from './config.js';
 
 ReactModal.setAppElement('#questions');
 
@@ -111,7 +112,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:4000/api/' + this.state.product)
+    axios.get(`http://${host}:4000/api/` + this.state.product)
       .then((response) => {
         this.loadQuestions(response.data);
       })

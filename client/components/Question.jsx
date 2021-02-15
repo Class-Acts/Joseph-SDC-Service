@@ -5,6 +5,7 @@ import axios from 'axios';
 import ReactModal from 'react-modal';
 import Answers from './Answers.jsx';
 import Answer from './Answer.jsx';
+import {host} from './config.js';
 
 ReactModal.setAppElement('#questions');
 
@@ -81,7 +82,7 @@ class Question extends React.Component {
   }
 
   upVotes() {
-    axios.put('http://localhost:4000/' + this.props.answers[0].id)
+    axios.put(`http://${host}:4000/` + this.props.answers[0].id)
       .then(() => {
         let newVotes = this.state.votes + 1;
         this.setState({
