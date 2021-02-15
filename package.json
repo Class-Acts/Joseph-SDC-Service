@@ -10,10 +10,8 @@
   },
   "scripts": {
     "watch": "webpack -w",
-    "start": "nodemon server",
-    "tsql": "nodemon server -sqlcmd",
-    "mysql": "nodemon server -mysql",
-    "clean": "./tsqlsetup.sh",
+    "start": "node server -tsql",
+    "mysql": "node server -mysql",
     "mysql:setup": "node database/mysql/seed.js",
     "seed:local": "node database/sqlcmd/seed.js -local",
     "seed:aws": "node database/sqlcmd/seed.js -aws"

@@ -12,11 +12,13 @@ const customModalStyles = {
   overlay: {zIndex: 1000}
 }
 
+const product_dom_id = document.getElementById('questions').attributes.product_id.nodeValue;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      product: 20,
+      product: product_dom_id || 20,
       questions: [],
       sortedBy: 'Newest questions',
       asking: false,
@@ -109,7 +111,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:4000/' + this.state.product)
+    axios.get('http://localhost:4000/api/' + this.state.product)
       .then((response) => {
         this.loadQuestions(response.data);
       })

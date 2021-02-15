@@ -1,7 +1,7 @@
 const sql = require('mssql');
 const path = require('path');
-// const dataPath = path.join(__dirname, 'data');
-const dataPath = '/csvs';
+const dataPath = path.join(__dirname, 'data');
+// const dataPath = '/csvs';
 
 const config = {
   user: 'student',
@@ -27,7 +27,7 @@ pool.on('error', err => {
 
 let count = 0;
 pool.on('connect', () => {
-  console.log(count++);
+  console.log('Connection count: ' + count++);
 });
 
 

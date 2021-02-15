@@ -1,5 +1,5 @@
 const express = require('express');
-const PORT = 4001;
+const PORT = 4000;
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -8,7 +8,7 @@ var db;
 
 
 //Allow connecting to two different databases based on command line argument
-if (process.argv[2] === undefined || process.argv[2] === '-sqlcmd') {
+if (process.argv[2] === undefined || process.argv[2] === '-tsql') {
   db = require('../database/sqlcmd/database.js');
   console.log('Connecting to t-sql db');
 } else if (process.argv[2] === '-mysql') {
@@ -30,6 +30,22 @@ app.use((req, res, next) => {
 });
 
 app.get('/:id', (req, res) => {
+  let product = req.params.id || 20;
+  res.send(`
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <title>RGI faker website</title>
+    </head>
+    <body>
+      <div product_id=${product} id="questions"></div>
+      <script src="bundle.js"></script>
+    </body>
+  </html>
+  `);
+});
+
+app.get('/api/:id', (req, res) => {
   //Start Timer (query start)
   console.time('getQuestions');
   let product = req.params.id;

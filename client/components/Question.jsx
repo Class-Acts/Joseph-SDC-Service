@@ -36,7 +36,7 @@ class Question extends React.Component {
   componentDidMount() {
     this.setState({
       answers: this.props.answers.length,
-      votes: this.props.answers[0].upvotes
+      votes: this.props.answers.length === 0 ? 0 : this.props.answers[0].upvotes
     })
   }
 
@@ -53,7 +53,7 @@ class Question extends React.Component {
         }
       })
     }
-    if (this.props.answers[0].upvotes !== prevAnswers.answers[0].upvotes) {
+    if (this.props.answers.length !== 0 && (this.props.answers[0].upvotes !== prevAnswers.answers[0].upvotes)) {
       this.setState({
         votes: this.props.answers[0].upvotes
       })
@@ -142,22 +142,24 @@ class Question extends React.Component {
             <div className="button-answer">
               <button onClick={this.popQuestion} type="button">Answer the question</button>
             </div>
-            <div className="answer-container">
-              <div className="answer-content">
-                <span className="user">{this.props.answers[0].user_name}</span>
-                <span className="dot">&#8226;</span>
-                <span className="time">{moment(this.props.answers[0].answered_at).fromNow()}</span>
-              </div>
-              <div className="answer">
-                <span>{this.props.answers[0].answer}</span>
-              </div>
-              <div className="helpful">
-                <span className="ten-font">Helpful?</span>
-                <button type="button" onClick={this.upVotes}>Yes &#8226; {' '}{this.state.votes}</button>
-                <button type="button" onClick={this.downVotes}>No &#8226; {' '}{this.state.downVotes}</button>
-                <button type="button">Report as inappropriate</button>
-              </div>
-            </div>
+            {
+              (this.props.answers.length === 0) ? null : (<div className="answer-container">
+                <div className="answer-content">
+                  <span className="user">{this.props.answers[0].user_name}</span>
+                  <span className="dot">&#8226;</span>
+                  <span className="time">{moment(this.props.answers[0].answered_at).fromNow()}</span>
+                </div>
+                <div className="answer">
+                  <span>{this.props.answers[0].answer}</span>
+                </div>
+                <div className="helpful">
+                  <span className="ten-font">Helpful?</span>
+                  <button type="button" onClick={this.upVotes}>Yes &#8226; {' '}{this.state.votes}</button>
+                  <button type="button" onClick={this.downVotes}>No &#8226; {' '}{this.state.downVotes}</button>
+                  <button type="button">Report as inappropriate</button>
+                </div>
+              </div>)
+            }
           </li>
           <ReactModal questionId={this.props.questionId} className="my-modal" isOpen={this.state.highlight} style={customModalStyles}>
             <div className="modal-content">
@@ -188,11 +190,11 @@ class Question extends React.Component {
                     <span className="ten-font">{this.state.answerDisplay}</span>
                   </div>
                 </div>
-                {this.props.answers.map((answer, index) => {
+                {this.props.answers.length === 0 ? null : (this.props.answers.map((answer, index) => {
                   return (
                     <Answers votes={answer.upvotes} upVote={this.upVotes} downVote={this.downVotes} downVotes={this.state.downVotes} answer={answer} key={index} />
                   )
-                })}
+                }))}
               </li>
               <Answer wasAnswered={this.wasAnswered} popQuestion={this.popQuestion} questionId={this.props.questionId} />
             </div>
