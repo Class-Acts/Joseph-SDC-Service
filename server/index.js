@@ -114,8 +114,8 @@ app.post('/questions/:id', (req, res) => {
       })
       res.end();
     }
-  })
-})
+  });
+});
 
 app.post('/answers/:id', (req, res) => {
   let questionId = req.params.id;
@@ -133,8 +133,8 @@ app.post('/answers/:id', (req, res) => {
     } else {
       res.send(data);
     }
-  })
-})
+  });
+});
 
 app.put('/:id', (req, res) => {
   let answeredAt = req.params.id;
@@ -145,12 +145,8 @@ app.put('/:id', (req, res) => {
       res.end();
     }
   })
-})
-
-
-
+});
 
 app.listen(PORT, () => {
   console.log('server listening at port: ' + PORT);
-})
-
+});
